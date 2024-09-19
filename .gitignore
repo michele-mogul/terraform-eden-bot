@@ -1,5 +1,8 @@
 # Project ignores
 src/eden.zip
+layer/.venv
+layer/python
+layer/layer_content.zip
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
