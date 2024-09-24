@@ -1,6 +1,8 @@
 import json
 import os
 import urllib3
+from telegram.ext import Application
+
 
 BOT_TOKEN = os.environ.get('telegram_key')
 
@@ -20,24 +22,16 @@ def send_reply(chat_id, message):
 
 
 def lambda_handler(event, context):
-    body = json.loads(event['body'])
-
-    print("*** Received event")
-
-    chat_id = body['message']['chat']['id']
-    user_name = body['message']['from']['username']
-    message_text = body['message']['text']
-
-    print(f"*** chat id: {chat_id}")
-    print(f"*** user name: {user_name}")
-    print(f"*** message text: {message_text}")
-    print(json.dumps(body))
-
-    reply_message = f"Reply to {message_text}"
-
-    send_reply(chat_id, reply_message)
+    Application.run_webhook(
+        listen='0.0.0.0',
+        port=80,
+        secret_token=BOT_TOKEN,
+        webhook_url=event.requestContext.domainName
+    )
 
     return {
         'statusCode': 200,
-        'body': json.dumps('Message processed successfully')
+        'body': json.dumps(f'Message processed successfully with domain name: {event.requestContext.domainName}')
     }
+
+

@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    klayers = {
-      version = "~> 1.0.0"
-      source  = "ldcorentin/klayer"
-    }
-  }
-}
-
 provider "aws" {
   region  = var.aws_region
   profile = var.aws_profile
@@ -63,23 +54,24 @@ resource "aws_iam_role_policy_attachment" "attach_iam_policy_to_iam_role" {
 }
 
 data "archive_file" "zip_the_python_code" {
-
   type        = "zip"
   source_dir  = "${path.module}/../src/"
   output_path = "${path.module}/build/eden.zip"
-
+  excludes    = [".venv"]
 }
 
-data "klayers_package_latest_version" "requests" {
-  name   = "requests"
-  region = var.aws_region
+data "archive_file" "zip_dependencies_layer" {
+  type        = "zip"
+  source_dir  = "${path.module}/../src/.venv/Lib/site-packages/"
+  output_path = "${path.module}/build/layer.zip"
 }
+
 
 resource "aws_lambda_layer_version" "layer" {
   layer_name = "lambda_layer"
-  filename = "${path.module}/../layer/layer.zip"
+  filename = "${path.module}/build/layer.zip"
   compatible_architectures = ["x86_64"]
-  compatible_runtimes = ["python3.9"]
+  compatible_runtimes = ["python3.12"]
 }
 
 resource "aws_lambda_function" "terraform_lambda_func" {
