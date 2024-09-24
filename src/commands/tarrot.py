@@ -1,13 +1,12 @@
 import os
 import random
-from pathlib import Path
 
 
 class ImageNotFoundError(Exception):
     pass
 
 
-def extract_tarot_file() -> Path:
+def extract_tarot_file() -> str:
     current_dir = os.path.dirname(__file__)
     TAROTS_BANK = os.path.join(current_dir, 'persist', 'tarots')
     if not os.path.exists(TAROTS_BANK):
@@ -17,7 +16,7 @@ def extract_tarot_file() -> Path:
         extracted_file = os.path.join(TAROTS_BANK, extracted_file)
         if not any(os.scandir(TAROTS_BANK)) or not extracted_file.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif')):
             raise ImageNotFoundError
-        return Path(extracted_file)
+        return extracted_file
 
 
 def main() -> None:

@@ -53,6 +53,12 @@ resource "aws_iam_role_policy_attachment" "attach_iam_policy_to_iam_role" {
 
 }
 
+resource "null_resource" "layer_generation" {
+  provisioner "local-exec" {
+    command = "pip install --platform=manylinux_2_17_x86_64 --only-binary=:all: -r ${path.module}/../src/requirements.txt -t ${path.module}/build/layer/python/"
+  }
+}
+
 data "archive_file" "zip_the_python_code" {
   type        = "zip"
   source_dir  = "${path.module}/../src/"
@@ -62,16 +68,17 @@ data "archive_file" "zip_the_python_code" {
 
 data "archive_file" "zip_dependencies_layer" {
   type        = "zip"
-  source_dir  = "${path.module}/../src/.venv/Lib/site-packages/"
+  source_dir  = "${path.module}/build/layer"
   output_path = "${path.module}/build/layer.zip"
+  depends_on = [null_resource.layer_generation]
 }
-
 
 resource "aws_lambda_layer_version" "layer" {
   layer_name = "lambda_layer"
   filename = "${path.module}/build/layer.zip"
   compatible_architectures = ["x86_64"]
   compatible_runtimes = ["python3.12"]
+  source_code_hash = data.archive_file.zip_dependencies_layer.output_base64sha256
 }
 
 resource "aws_lambda_function" "terraform_lambda_func" {
@@ -80,7 +87,7 @@ resource "aws_lambda_function" "terraform_lambda_func" {
   function_name = "EdenBotLambdaFunction"
   role          = aws_iam_role.lambda_role.arn
   handler       = "index.lambda_handler"
-  runtime       = "python3.8"
+  runtime       = "python3.12"
   depends_on    = [aws_iam_role_policy_attachment.attach_iam_policy_to_iam_role]
   environment {
     variables = {

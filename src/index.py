@@ -1,37 +1,47 @@
+# main.py
 import json
 import os
-import urllib3
-from telegram.ext import Application
+from telegram import Update, InputFile
+from telegram.ext import Application, CommandHandler
+from telegram.ext._contexttypes import ContextTypes
+import asyncio
+from commands.tarrot import extract_tarot_file
 
 
-BOT_TOKEN = os.environ.get('telegram_key')
+# Example handler
+async def tarot(update, _: ContextTypes.DEFAULT_TYPE):
+    with open(extract_tarot_file(), 'rb') as f:
+        contents = f.read()
+        await update.message.reply_photo(
+            InputFile(contents)
+        )
+        f.close()
+
+def lambda_handler(event=None, context=None):
+    try:
+        asyncio.run(run(event))
+    except Exception as e:
+        print(e)
+        return {"statusCode": 500}
+
+    return {"statusCode": 200}
 
 
-def send_reply(chat_id, message):
-    reply = {
-        "chat_id": chat_id,
-        "text": message
-    }
-
-    http = urllib3.PoolManager()
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    encoded_data = json.dumps(reply).encode('utf-8')
-    http.request('POST', url, body=encoded_data, headers={'Content-Type': 'application/json'})
-
-    print(f"*** Reply : {encoded_data}")
-
-
-def lambda_handler(event, context):
-    Application.run_webhook(
-        listen='0.0.0.0',
-        port=80,
-        secret_token=BOT_TOKEN,
-        webhook_url=event.requestContext.domainName
+async def run(event):
+    BOT_TOKEN = os.environ.get('telegram_key')
+    app = (
+        Application.builder()
+        .updater(None)
+        .token(BOT_TOKEN)
+        .build()
     )
 
-    return {
-        'statusCode': 200,
-        'body': json.dumps(f'Message processed successfully with domain name: {event.requestContext.domainName}')
-    }
+    app.add_handler(CommandHandler("tarocco", tarot))
+    message = json.loads(event['body'])
+    print("Incoming:", message)
 
-
+    await app.initialize()
+    await app.start()
+    await app.process_update(Update.de_json(message, app.bot))
+    await app.stop()
+    await app.shutdown()
