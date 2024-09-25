@@ -6,6 +6,7 @@ from telegram.ext import Application, CommandHandler
 from telegram.ext._contexttypes import ContextTypes
 import asyncio
 from commands.tarrot import extract_tarot_file
+from commands.iching import extract_iching, prophet_iching
 
 
 # Example handler
@@ -16,6 +17,17 @@ async def tarot(update, _: ContextTypes.DEFAULT_TYPE):
             InputFile(contents)
         )
         f.close()
+
+
+async def extractIChing(update, _: ContextTypes.DEFAULT_TYPE):
+    print(update.message.text)
+    await update.message.reply_text(extract_iching(update.message.text))
+
+
+async def prophetIChing(update, _: ContextTypes.DEFAULT_TYPE):
+    print(update.message.text)
+    await update.message.reply_text(prophet_iching(update.message.text))
+
 
 def lambda_handler(event=None, context=None):
     try:
@@ -37,6 +49,8 @@ async def run(event):
     )
 
     app.add_handler(CommandHandler("tarocco", tarot))
+    app.add_handler(CommandHandler("esagramma", extractIChing))
+    app.add_handler(CommandHandler("profetizza", prophetIChing))
     message = json.loads(event['body'])
     print("Incoming:", message)
 
