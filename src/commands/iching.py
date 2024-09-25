@@ -1,16 +1,19 @@
+#!/usr/bin/python
+# -*- coding: utf8 -*-
 import json
+import os
 import random
-from collections import defaultdict
 from datetime import datetime
 
-with open('./persist/data.json', encoding='utf8') as f:
+dir_path = os.path.dirname(os.path.realpath(__file__))
+data_file_path = os.path.join(dir_path, './persist/iching.json')
+with open(data_file_path, encoding='utf8') as f:
     data = json.load(f)
 
 trigram_sequences = {
     'earlierHeaven': [1, 6, 4, 5, 2, 3, 7, 8],
     'laterHeaven': [7, 2, 8, 1, 4, 5, 3, 6]
 }
-
 
 class IChing:
     def __init__(self):
