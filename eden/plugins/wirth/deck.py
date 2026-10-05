@@ -8,16 +8,16 @@ gives in "La consultation du Tarot".
 import html
 import json
 import random
-import re
 from dataclasses import dataclass
 from datetime import date
 from functools import lru_cache
 from pathlib import Path
 
+from eden.core.ui import fits_caption, plain_length  # noqa: F401  (re-exported for the plugin)
+
 HERE = Path(__file__).parent
 ROMAN = ("0 I II III IV V VI VII VIII IX X XI XII XIII XIV XV XVI XVII XVIII XIX XX XXI").split()
 FOOL_VALUE = 22   # the Fool is unnumbered and counts as 22 in the spread
-CAPTION_LIMIT = 1024
 
 
 @dataclass(frozen=True)
@@ -110,15 +110,6 @@ def position_label(i: int) -> str:
 
 def card_text(c: Card, head: str = "") -> str:
     return f"{head}<b>{_e(c.title)}</b>\n\n" + "\n\n".join(_e(p) for p in c.paragraphs)
-
-
-def plain_length(text: str) -> int:
-    """Length as Telegram counts it: without tags, entities decoded."""
-    return len(html.unescape(re.sub(r"<[^>]+>", "", text)))
-
-
-def fits_caption(text: str) -> bool:
-    return plain_length(text) <= CAPTION_LIMIT
 
 
 def spread_caption(question: str, cards: tuple[Card, ...]) -> str:

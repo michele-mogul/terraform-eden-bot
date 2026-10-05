@@ -91,7 +91,6 @@ TRIGRAMS = {
     (0, 0, 1): ("☶", "Gen, il tener fermo, il monte"), (0, 1, 1): ("☴", "Sun, il mite, il vento"),
     (1, 0, 1): ("☲", "Li, l'aderente, il fuoco"), (1, 1, 0): ("☱", "Dui, il sereno, il lago"),
 }
-YANG, YIN = "━━━━━━━━━", "━━━   ━━━"
 MARK = {6: "✕", 9: "○"}             # old yin and old yang: the moving lines
 VALUE = {6: "sei", 9: "nove"}
 PLACE = {2: "secondo", 3: "terzo", 4: "quarto", 5: "quinto"}
@@ -116,18 +115,6 @@ def line_heading(position: int, value: int) -> str:
     return f"{v.capitalize()} al {PLACE[position]} posto significa:"
 
 
-def figure(r: Reading) -> str:
-    """The hexagram drawn top to bottom, moving lines marked, and the relating one beside it."""
-    rows = []
-    for i in range(5, -1, -1):
-        v = r.values[i]
-        row = f"{i + 1} {YANG if v in (7, 9) else YIN} {MARK.get(v, ' ')}"
-        if r.relating:
-            row += f"   {YANG if r.relating['lines'][i] else YIN}"
-        rows.append(row)
-    return "<code>" + "\n".join(rows) + "</code>"
-
-
 def title(h: dict) -> str:
     return f"<b>{h['character']} {h['number']} · {_e(h['wilhelm'])} · {_e(h['name'])}</b>"
 
@@ -138,12 +125,12 @@ def describe(h: dict) -> str:
 
 
 def header(r: Reading) -> str:
-    head = f"❓ <i>{_e(r.question)}</i>\n\n" if r.question.strip() else ""
-    return head + figure(r)
+    """The question, first line of every page (the buttons read it back from there)."""
+    return f"❓ <i>{_e(r.question)}</i>\n\n" if r.question.strip() else ""
 
 
 def hexagram_text(r: Reading) -> str:
-    return header(r) + "\n\n" + describe(r.primary)
+    return header(r) + describe(r.primary)
 
 
 def moving_text(r: Reading) -> str:

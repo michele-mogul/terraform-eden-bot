@@ -8,7 +8,8 @@ from types import SimpleNamespace
 from unittest.mock import AsyncMock
 
 from eden.plugins import iching
-from eden.plugins.iching.oracle import (TRIGRAMS, by_lines, cast, cast_line, figure, from_values,
+from eden.plugins.iching.images import figure
+from eden.plugins.iching.oracle import (TRIGRAMS, by_lines, cast, cast_line, from_values,
                                         hexagram_text, hexagrams, trigrams)
 
 
@@ -91,14 +92,13 @@ def test_trigrams_match_the_data_for_all_64():
                                                       "sotto: ☰ Kiën, il creativo, il cielo")   # 11
 
 
-def test_figure_is_drawn_top_down_with_moving_marks_and_relating():
-    r = from_values([9, 8, 8, 8, 8, 6])          # moving: line 1 (old yang), line 6 (old yin)
-    rows = figure(r).removeprefix("<code>").removesuffix("</code>").split("\n")
-    assert [row[0] for row in rows] == list("654321")
-    assert rows[0].startswith("6 ━━━   ━━━ ✕") and rows[0].endswith("━━━━━━━━━")
-    assert rows[5].startswith("1 ━━━━━━━━━ ○") and rows[5].endswith("━━━   ━━━")
-    assert len({len(row) for row in rows}) == 1
-    assert "   ━" not in figure(from_values([7, 8, 7, 8, 7, 8]))[-12:]   # no relating column
+def test_figure_picture_has_one_or_two_hexagrams():
+    from io import BytesIO
+    from PIL import Image
+    single = Image.open(BytesIO(figure(from_values([7, 8, 7, 8, 7, 8]))))
+    double = Image.open(BytesIO(figure(from_values([9, 8, 8, 8, 8, 6]))))
+    assert single.format == "PNG" and double.height == single.height
+    assert double.width > single.width + 300           # the relating hexagram beside it
 
 
 def test_from_values_rebuilds_the_same_reading():
@@ -127,7 +127,7 @@ def test_buttons_change_one_message_and_only_for_the_asker():
     update, query = _query(buttons[1].callback_data, markup)            # "Linee mobili"
     asyncio.run(iching.on_button(update, None))
     text, kwargs = query.edit_message_text.call_args.args[0], query.edit_message_text.call_args.kwargs
-    assert "❓ <i>amore &amp; &lt;odio&gt;?</i>" in text and "All'inizio un nove significa:" in text and "<code>" in text
+    assert "❓ <i>amore &amp; &lt;odio&gt;?</i>" in text and "All'inizio un nove significa:" in text
     assert [b.text.startswith("▸ ") for b in kwargs["reply_markup"].inline_keyboard[0]] == [False, True, False]
 
     update, query = _query(buttons[2].callback_data, markup, user=7)    # someone else
