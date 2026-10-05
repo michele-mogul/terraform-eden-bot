@@ -17,6 +17,11 @@ In groups commands also work as `/tarocco@botname`. Each user has a short cooldo
 ## Sources
 
 - Rider-Waite-Smith images (1909, public domain).
+- I Ching: Richard Wilhelm, *I Ging. Das Buch der Wandlungen* (Jena 1924, public domain since 2001):
+  the judgement (Das Urteil), image (Das Bild) and line texts of the 64 hexagrams, translated
+  literally into Italian with a fixed glossary (`eden/plugins/iching/data/iching.json`). The German
+  text was read from zeno.org and is not redistributed here. The earlier English texts
+  (Wilhelm/Baynes 1950, still under copyright) were removed.
 - Oswald Wirth: the 1889 Major Arcana (BnF scans via Wikimedia Commons, public domain) and the
   "Interprétations divinatoires" of *Le Tarot des imagiers du Moyen Âge* (1927, public domain since
   2014), translated into Italian literally and in full (paragraphs as in the book, footnotes omitted,
