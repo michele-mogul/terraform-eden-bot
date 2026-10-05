@@ -63,6 +63,20 @@ def card_of_the_day(user_id: int, day: date) -> Card:
 # Wirth's names for the five places of the cross, in drawing order; the fifth is computed
 POSITIONS = (("Affermazione", "Pro"), ("Negazione", "Contro"), ("Discussione", "Giudice"),
              ("Soluzione", "Sentenza"), ("Sintesi", ""))
+# How each place is read, in Wirth's words ("L'interprétation de l'oracle"), translated literally;
+# for the Synthesis the pronoun "Celle-ci" is replaced by its noun
+READING = (
+    "L'Affermazione mette sulla via di ciò che è favorevole e indica ciò che è bene fare, la "
+    "qualità, la virtù, l'amico, il protettore su cui si può contare.",
+    "Inversamente, la Negazione designa ciò che è ostile o sfavorevole, ciò che bisogna evitare o "
+    "temere, il difetto, il vizio, il nemico, il pericolo, la tentazione perniciosa.",
+    "La Discussione illumina sul partito da prendere, sul genere di risoluzione che conviene "
+    "adottare, sull'intervento che sarà decisivo.",
+    "La Soluzione permette di presagire un risultato tenendo conto del pro e del contro, ma "
+    "soprattutto della Sintesi.",
+    "La Sintesi si riferisce, in effetti, a ciò che è d'importanza capitale, a ciò da cui tutto "
+    "dipende.",
+)
 
 
 def synthesis(values: list[int]) -> Card:

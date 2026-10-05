@@ -10,7 +10,7 @@ from telegram.ext import ContextTypes
 
 from eden.core.plugin import Callback, Command, Plugin
 from eden.core.ui import CURRENT, only_owner, pressed_is_current, suspense
-from eden.plugins.wirth.deck import (POSITIONS, Card, card_of_the_day, card_text, draw,
+from eden.plugins.wirth.deck import (POSITIONS, READING, Card, card_of_the_day, card_text, draw,
                                      fits_caption, position_label, spread_caption,
                                      spread_from_numbers, wirth_spread)
 from eden.plugins.wirth.images import cross
@@ -54,7 +54,7 @@ def keyboard(numbers: list[int], owner: int, current: int) -> InlineKeyboardMark
 
 
 def place_text(cards: tuple[Card, ...], i: int) -> str:
-    return card_text(cards[i], f"<b>{position_label(i)}</b>\n")
+    return card_text(cards[i], f"<b>{position_label(i)}</b>\n<i>{READING[i]}</i>\n\n")
 
 
 async def stesa(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

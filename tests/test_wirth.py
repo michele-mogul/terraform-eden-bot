@@ -92,7 +92,10 @@ def test_places_change_one_message_and_only_for_the_asker():
     buttons = [b for row in markup.inline_keyboard for b in row]
     assert len(buttons) == 5 and buttons[0].text.startswith("▸ ")
     assert all(len(b.callback_data.encode()) <= 64 for b in buttons)
-    assert wirth.place_text(wirth_spread(random.Random(1)), 0).startswith("<b>Affermazione · Pro</b>")
+    first = wirth.place_text(wirth_spread(random.Random(1)), 0)
+    assert first.startswith("<b>Affermazione · Pro</b>\n<i>L'Affermazione mette sulla via")
+    assert all(len(wirth.place_text(spread, i)) < 4096
+               for spread in (wirth_spread(random.Random(n)) for n in range(200)) for i in range(5))
 
     update, query = _query(buttons[4].callback_data, markup)  # Sintesi: 46 → 10
     asyncio.run(wirth.on_button(update, None))
