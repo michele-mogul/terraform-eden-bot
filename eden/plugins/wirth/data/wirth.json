@@ -1,160 +1,213 @@
 {
- "source": "Oswald Wirth, Le Tarot des imagiers du Moyen Âge (1927), «Interprétations divinatoires»; public domain. Italian translation for Eden.",
- "deck": "Oswald Wirth, Tarot kabbalistique (1889), BnF via Wikimedia Commons; public domain.",
+ "source": "Oswald Wirth, Le Tarot des imagiers du Moyen Âge (1927), «Interprétations divinatoires» of each arcanum (public domain). Literal and complete Italian translation, paragraphs as in the book, footnotes omitted; OCR doubts checked against the BnF scan.",
+ "deck": "Oswald Wirth, Tarot kabbalistique (1889), BnF scans via Wikimedia Commons (public domain).",
  "cards": [
   {
    "number": 0,
    "name": "Il Matto",
-   "essence": "L'Abisso senza fondo: l'Assoluto, l'Infinito, ciò che supera la nostra comprensione. L'Irrazionale, il Vuoto, la Notte cosmogonica, la sostanza primordiale.",
-   "favorable": "Ciò che oltrepassa ogni limite e ogni ragione: l'Infinito, la sostanza primordiale da cui tutto procede. Il Nirvana.",
-   "unfavorable": "Passività, impulsività, abbandono agli istinti ciechi, agli appetiti e alle passioni. Irresponsabilità, follia, incapacità di dirigersi e di resistere alle influenze subite, perdita del libero arbitrio. Strumento altrui, cieco trascinato alla propria rovina. Insensibilità, indifferenza, noncuranza, incapacità di riconoscere i propri torti."
+   "paragraphs": [
+    "Parabrahm, Apsu, l'Abisso senza fondo, l'Assoluto, l'Infinito, Ensoph. Ciò che supera la nostra comprensione. L'Irrazionale, l'Assurdo. Il Vuoto, il Nulla, la Notte cosmogonica. La sostanza primordiale. Disintegrazione, annientamento spirituale. Nirvana.",
+    "Passività, impulsività, abbandono agli istinti ciechi, agli appetiti e alle passioni. Irresponsabilità, alienazione, follia. Inattitudine a dirigersi, incapacità di resistere alle influenze subite. Medianità, soggezione, perdita del libero arbitrio. Schiavitù.",
+    "Nullità. Zimbello delle forze occulte. Squilibrato influenzabile. Soggetto ipnotico. Strumento altrui. Incoscienza. Profano non iniziabile, Cieco trascinato alla sua perdita. Insensato che si abbandona ai suoi ghiribizzi. Insensibilità, indifferenza, noncuranza. Incapacità di riconoscere i propri torti e di provarne rimorso."
+   ]
   },
   {
    "number": 1,
    "name": "Il Bagatto",
-   "essence": "Kether, la Corona: il principio di tutte le cose. Causa prima, Unità, Spirito puro, il soggetto pensante che si riflette nell'Io di ogni creatura intelligente.",
-   "favorable": "Iniziativa, centro d'azione, intelligenza spontanea, acutezza di discernimento e di comprensione, presenza di spirito, padronanza di sé, autonomia, libertà da ogni pregiudizio. Destrezza, abilità, finezza diplomatica.",
-   "unfavorable": "Parlatore persuasivo e fanfarone; astuzia, furbizia, agitazione. Mancanza di scrupoli, arrivismo, intrigo, menzogna, imbroglio, ciarlataneria, sfruttamento del candore altrui. Influenza di Mercurio, nel bene come nel male."
+   "paragraphs": [
+    "KÉTHER, la Corona dell'Albero dei Sephiroth. Il cominciamento di tutte le cose: Causa prima, Unità-Principio, Spirito puro, Soggetto pensante unico e universale, che si rifrange nell'Io di ogni creatura intelligente.",
+    "Iniziativa, centro d'azione, spontaneità d'intelligenza, acutezza di discernimento e di comprensione, presenza di spirito, possesso di sé, autonomia, rifiuto di ogni suggestione estranea, emancipazione da ogni pregiudizio.",
+    "Destrezza, abilità, finezza diplomatica. Parolaio persuasivo, avvocato; scaltrezza, astuzia, agitazione. Assenza di scrupoli, arrivista, intrigante, mentitore, furfante, truffatore, ciarlatano, sfruttatore del candore umano. — Influenza di Mercurio nel bene come nel male."
+   ]
   },
   {
    "number": 2,
    "name": "La Papessa",
-   "essence": "Chokmah, la Sapienza, il Pensiero creatore. Iside, la Natura, madre di tutte le cose. La Scienza sacra, il cui oggetto sfugge ai sensi.",
-   "favorable": "Divinazione, filosofia intuitiva, gnosi, discernimento del mistero, fede contemplativa. Silenzio, discrezione, riserbo, meditazione. Modestia, pazienza, rassegnazione, pietà, rispetto delle cose sante.",
-   "unfavorable": "Dissimulazione, intenzioni nascoste, rancore, inerzia, pigrizia, bigottismo, intolleranza, fanatismo. Influenza saturnina passiva."
+   "paragraphs": [
+    "C'HOCMAH, la Sapienza, il Pensiero creatore, il Verbo, seconda persona della Trinità, Iside, la Natura, sposa di Dio e madre di tutte le cose. La sostanza che riempie lo spazio illimitato; il campo d'azione della causa attiva e intelligente. L'opposizione feconda da cui tutto si genera. La differenziazione che permette di distinguere, di percepire, dunque di conoscere e di sapere.",
+    "La Scienza sacra, il cui oggetto non cade sotto i sensi.",
+    "Divinazione, Filosofia intuitiva, Gnosi, discernimento del mistero, Religione spontanea, Fede contemplativa.",
+    "Silenzio, discrezione, riserbo, meditazione. Modestia, pazienza, rassegnazione, pietà, rispetto delle cose sante. — Dissimulazione, intenzioni nascoste, rancore, inerzia, pigrizia, bigotteria, intolleranza, fanatismo. Influenza saturnina passiva."
+   ]
   },
   {
    "number": 3,
    "name": "L'Imperatrice",
-   "essence": "Binah, l'Intelligenza: la concezione astratta che genera le idee e le forme, il pensiero percepito ma non ancora espresso. Il dominio del conoscibile.",
-   "favorable": "Discernimento, riflessione, studio, osservazione, istruzione, sapere, erudizione. Affabilità, grazia, fascino, potere dell'anima, autorità esercitata con la dolcezza, influenza civilizzatrice. Cortesia, generosità. Abbondanza, ricchezza, fecondità.",
-   "unfavorable": "Sfarzo, vanità, frivolezza, lusso, prodigalità, civetteria, seduzione; ostentazione di nozioni superficiali, posa, affettazione."
+   "paragraphs": [
+    "BINAH, Intelligenza, Comprensione, la Concezione astratta generatrice delle idee e delle forme, Idealità suprema, pensiero percepito ma non ancora espresso.",
+    "Dominio di ciò che è conoscibile e intelligibile. Discernimento, riflessione, studio, osservazione, scienza induttiva. Istruzione, sapere, erudizione.",
+    "Affabilità, grazia, fascino, potenza dell'anima, impero esercitato con la dolcezza, influenza civilizzatrice. Cortesia, generosità. Abbondanza, ricchezza, fecondità.",
+    "Sfarzo, vanità, frivolezza, lusso, prodigalità, civetteria, seduzione, sfoggio di nozioni superficiali, posa, affettazione."
+   ]
   },
   {
    "number": 4,
    "name": "L'Imperatore",
-   "essence": "Chesed, Grazia e Misericordia, o Gedulah, Grandezza: il potere che dona e diffonde la vita, il principio animatore, il fuoco vitale racchiuso nel germe.",
-   "favorable": "Energia, potere, diritto, volontà, fermezza, concentrazione, certezza per deduzione rigorosa, costanza, rigore, esattezza, equità, positività. Protettore potente.",
-   "unfavorable": "Spirito dominatore che influenza gli altri senza lasciarsi influenzare; calcolatore che si fida solo del ragionamento, ostinazione, mancanza di idealità e di intuizione, generosità senza amabilità. Avversario temibile, tiranno, despota; mascolinità brutale."
+   "paragraphs": [
+    "C'HESED, grazia, misericordia, mercé, o GEDULAH, grandezza, magnificenza, designazione del quarto ramo dell'albero dei Sephiroth o numeri cabalistici; potere che dona e diffonde la vita, bontà creatrice che chiama gli esseri all'esistenza, principio animatore, luce creatrice ripartita fra le creature e condensata al centro di ogni individualità; Archeo, Zolfo degli Alchimisti, fuoco vitale imprigionato nel germe, verbo realizzatore incarnato, fuoco agente, sposo mistico e figlio della sostanza animica (Vergine, Imperatrice, Arc. III).",
+    "Energia, potere, diritto, volontà, fissità, concentrazione, certezza assoluta per deduzione matematica, costanza, fermezza, rigore, esattezza, equità, positivismo.",
+    "Spirito dominatore, che influenza gli altri senza lasciarsi influenzare; calcolatore che si fida solo del ragionamento e dell'osservazione positiva; carattere incrollabile nelle sue risoluzioni, ostinazione; mancanza d'idealità o d'intuizione; generosità senza amabilità, protettore potente o avversario temibile; tiranno; despota che subisce per contraccolpo l'influenza dei deboli: mascolinità brutale indirettamente sottomessa alla dolcezza femminile."
+   ]
   },
   {
    "number": 5,
    "name": "Il Papa",
-   "essence": "Geburah, Rigore e Severità; Din, il Giudizio: la volontà che trattiene e governa la vita donata. Coscienza, Dovere, Legge morale.",
-   "favorable": "Insegnamento, metafisica, sapere; autorità, certezza, sicurezza, influenza sul sentimento e sul pensiero altrui. Affabilità, benevolenza, bontà, generosità giudiziosa. Direttore di coscienza, medico dell'anima, consigli morali. Funzione che conferisce prestigio. Influenza gioviale.",
-   "unfavorable": "Personaggio sentenzioso, pontefice assoluto nelle proprie opinioni. Preso in cattiva parte: immoralità, perché quando un arcano diventa negativo i difetti prendono il posto delle qualità."
+   "paragraphs": [
+    "GEBURAH, Rigore, Severità; PEC'HAD, Punizione, Timore; DIN, Giudizio, volontà che trattiene o governa la Vita donata. Coscienza, Dovere, Legge morale, Inibizione, Restrizione, perché bisogna astenersi dal fare il male prima di consacrarsi attivamente alle opere del bene.",
+    "Sacerdozio, Scienza religiosa, Metafisica, Cabala, Insegnamento, Sapere (opposto al Potere), Autorità, Certezza, Sicurezza, Assenza di dubbio, Influenza suggestiva esercitata sul sentimento e sul pensiero altrui. Affabilità, Benevolenza, Bontà, Generosità giudiziosa.",
+    "Un direttore di coscienza, Medico dell'anima, Consigli morali, Personaggio sentenzioso. Pontefice assoluto nelle sue opinioni. Funzione che conferisce prestigio, Influenza di Giove nel bene e nel male.",
+    "Preso in cattiva parte: immoralità, perché i difetti si sostituiscono alle qualità quando un arcano diventa negativo."
+   ]
   },
   {
    "number": 6,
    "name": "L'Innamorato",
-   "essence": "Tiphereth, la Bellezza morale: l'Amore, il legame che unisce tutti gli esseri. La sfera dell'anima, soggetta ad attrazioni e repulsioni.",
-   "favorable": "Simpatie, affetti puri, estranei all'attrazione carnale. Aspirazioni, desideri da cui dipende la bellezza dell'anima, voti, auspici. Libertà, scelta, libero arbitrio.",
-   "unfavorable": "Tentazione, prova, dubbio, incertezza, irresolutezza, esitazione. Sentimentalismo, perplessità, indecisione; affare che resta in sospeso, promesse, desideri non realizzati."
+   "paragraphs": [
+    "THIPHERETH, Bellezza morale, Amore, legame che unisce tutti gli esseri: Sentimentalità; Sfera animica soggetta ad attrazioni e repulsioni, Simpatie e antipatie, Affetti puri, estranei all'attrattiva carnale.",
+    "Aspirazioni, Desideri da cui dipende la bellezza dell'anima, Voti, auspici: Libertà, scelta, selezione, libero arbitrio; Tentazione, prova, dubbio, incertezza, irresolutezza, esitazione.",
+    "Sentimentalismo, Perplessità, Indecisione, Affare che resta in sospeso, Promesse, Desideri irrealizzati."
+   ]
   },
   {
    "number": 7,
    "name": "Il Carro",
-   "essence": "Netzach, Trionfo e Vittoria: la spiritualità che agisce, il progresso consapevole, il principio costruttore dell'Universo, il Grande Architetto.",
-   "favorable": "Padronanza, dominio assoluto di sé, direzione, governo; sovranità dell'intelligenza e del tatto, armonizzazione pacificatrice. Talento, riuscita per merito personale, successo legittimo, diplomazia leale, ambizione, avanzamento, posizione di capo.",
-   "unfavorable": "Incapacità, mancanza di talento, di tatto, di diplomazia o di spirito conciliante; cattiva condotta, malgoverno."
+   "paragraphs": [
+    "NETZAH, Trionfo, Vittoria, Fermezza — spiritualità agente, progresso cosciente, evoluzione intelligente, principio costruttore dell'Universo, Grande Architetto.",
+    "Padronanza, dominio assoluto su se stessi, direzione, governo, sovranità dell'intelligenza e del tatto, discernimento conciliatore, armonizzazione pacificatrice e civilizzatrice.",
+    "Talento, riuscita grazie al merito personale, successo legittimo, diplomazia leale, abilità nel trarre profitto dall'azione avversa, ambizione, avanzamento, posizione di direttore o di capo.",
+    "In negativo: incapacità, mancanza di talento, di tatto, di diplomazia o di spirito conciliatore; cattiva condotta, malgoverno."
+   ]
   },
   {
    "number": 8,
    "name": "La Giustizia",
-   "essence": "Hod, Splendore e Gloria: la Divinità manifestata dall'ordine e dall'armonia della natura. Legge, equilibrio, stabilità vivente; giustizia immanente, conseguenze inevitabili di ogni azione.",
-   "favorable": "Logica, sicurezza di giudizio, imparzialità, indipendenza di spirito, onestà, integrità, regolarità, disciplina. Decisione, risoluzione presa, regola di condotta. Metodo, esattezza, minuzia. Un amministratore, un giudice, un uomo di legge.",
-   "unfavorable": "Dialettico fecondo di cavilli e sottili distinzioni. Routine, spirito conservatore, paura del nuovo. Subalterno che sa obbedire ma è incapace di iniziativa."
+   "paragraphs": [
+    "HOD, Splendore, Gloria, la Divinità manifestata dall'ordine e dall'armonia della natura, la potenza conservatrice delle cose. Legge, equilibrio, stabilità vivente, concatenazione logica e necessaria delle idee, dei sentimenti e degli atti, Fatalità che discende da ciò che è compiuto. Giustizia immanente, conseguenze ineluttabili di ogni azione.",
+    "Logica, sicurezza di giudizio, imparzialità, indipendenza di spirito, onestà, integrità, regolarità, disciplina, rispetto della gerarchia, sottomissione alle convenienze e agli usi. Sentenza, decisione, risoluzione presa, fermo proposito, regola di condotta.",
+    "Metodo, esattezza, minuzia. Un amministratore, un ministro, un gestore, un giudice, un uomo di legge o un agente incaricato di mantenere l'ordine. Un dialettico fecondo di cavilli, di distinzioni sottili. Routine, spirito conservatore, neofobia. Subalterno che sa obbedire, ma incapace d'iniziativa."
+   ]
   },
   {
    "number": 9,
    "name": "L'Eremita",
-   "essence": "Yesod, il Fondamento: l'essere in potenza di divenire, il piano vivente che precede la sua realizzazione. Tradizione, esperienza, patrimonio imperituro del passato.",
-   "favorable": "Sapere approfondito, prudenza, circospezione, raccoglimento, silenzio, discrezione, riserbo. Saggio distaccato dal mondo e dalle ambizioni meschine, spirito profondo e meditativo. Medico esperto dello spirito, dell'anima e del corpo. Iniziatore, maestro.",
-   "unfavorable": "Carattere saturnino, serio, taciturno, scontroso, diffidente. Spirito timoroso, meticoloso, pesante. Tristezza, misantropia, scetticismo, scoraggiamento, avarizia, povertà."
+   "paragraphs": [
+    "JESOD, Fondamento. L'essere in potenza di divenire, potenzialità condensate nel germe. Il piano vivente preesistente all'oggettivazione. La trama invisibile dell'organismo da costruire. Modello demiurgico che imprime negli individui i caratteri della specie. Corpo astrale degli occultisti.",
+    "Tradizione. Esperienza. Patrimonio imperituro del passato. Sapere approfondito. Prudenza. Circospezione. Raccoglimento. Silenzio. Discrezione. Riserbo. Isolamento. Continenza. Castità. Celibato. Austerità.",
+    "Saggio distaccato dal mondo, morto alle passioni e alle ambizioni meschine. Spirito profondo, meditativo, estraneo a ogni frivolezza. Medico esperto dello spirito, dell'anima e del corpo. Adepto che pratica la Medicina universale. Filosofo ermetico che possiede il segreto della Pietra dei Saggi. Iniziatore. Maestro capace di dirigere il lavoro altrui e di discernere ciò che è in gestazione nell'ordine del divenire umano. Ostetrico.",
+    "Carattere saturnino, serio, taciturno, accigliato, diffidente. Spirito timoroso, meticoloso, pesante. Tristezza, misantropia, scetticismo, scoraggiamento, avarizia, povertà."
+   ]
   },
   {
    "number": 10,
-   "name": "La Ruota di Fortuna",
-   "essence": "Malkuth, il Regno: il dominio della sovranità del Volere, il principio dell'individualità. Germe, seme, energia fecondante.",
-   "favorable": "Iniziativa, sagacia, presenza di spirito, spontaneità, attitudine all'invenzione. Riuscita grazie a occasioni colte al momento giusto; fortuna, scoperte fortuite che arricchiscono o portano al successo.",
-   "unfavorable": "Destino propizio che fa riuscire senza un vero merito; vantaggi dovuti al caso. Posizione invidiata ma instabile, alti e bassi, incostanza. Benefici passeggeri."
+   "name": "La Ruota della Fortuna",
+   "paragraphs": [
+    "MALCUT, Regno. Il dominio della sovranità del Volere. Il principio dell'individualità. Involuzione. Germe, semenza, sperma. Energia fecondante. Jod, colonna Jakin.",
+    "Iniziativa, sagacia, presenza di spirito, spontaneità, attitudine alle invenzioni. Divinazione d'ordine pratico. Riuscita dovuta a occasioni colte al momento opportuno.",
+    "Fortuna, scoperte fortuite che arricchiscono o conducono al successo. Destino propizio che fa riuscire al di fuori di un reale merito personale. Vantaggi tratti dal caso. Situazione invidiata ma instabile. Alternanze di alti e bassi. Incostanza. Fortuna minore della Geomanzia. Benefici transitori."
+   ]
   },
   {
    "number": 11,
    "name": "La Forza",
-   "essence": "Energia psichica: il potere dell'anima che domina e coordina gli impulsi in lotta. Ragione e sentimento uniti per sottomettere l'Istinto; trionfo dell'intelligenza sulla brutalità.",
-   "favorable": "Virtù, coraggio, calma, intrepidezza; forza morale che si impone alla forza bruta e alle passioni egoistiche. Padronanza assoluta di sé, anima forte, natura energica e attiva. Lavoro, attività intelligente.",
-   "unfavorable": "Carattere vivace, irruente, bollente; impazienza, collera, temerarietà. Influenza marziale. Vanteria, spacconeria. Insensibilità, rudezza, grossolanità, crudeltà, furore."
+   "paragraphs": [
+    "Energia psichica. Potere dell'anima corporea che domina e coordina gli impulsi in lotta in seno all'organismo. Ragione e sentimento uniti per sottomettere l'Istinto. Verbo individuale. Irradiazione del Pensiero-Volontà emesso dall'individuo. Trionfo dell'intelligenza sulla brutalità. Saggezza e scienza umane che assoggettano le forze cieche della Natura.",
+    "Virtù, coraggio, calma, intrepidezza. Forza morale che s'impone alla forza brutale e alle passioni egoistiche.",
+    "Padronanza assoluta di se stessi. Anima forte. Natura energica, attiva. Lavoro, attività intelligente. Domatore.",
+    "Carattere vivace, impetuoso, bollente. Impazienza, collera, temerarietà. Influenza di Marte. Vanteria, fanfaronata. Insensibilità, rudezza, grossolanità, crudeltà, furore."
+   ]
   },
   {
    "number": 12,
    "name": "L'Appeso",
-   "essence": "L'anima liberata che avvolge il corpo. Misticismo: l'uomo che entra in rapporto con Dio e collabora alla Grande Opera, la trasmutazione universale del male in bene. Sacrificio redentore.",
-   "favorable": "Perfezione morale, abnegazione, totale oblio di sé, dedizione, disinteresse assoluto. Sacrificio volontario per una causa elevata. Sacerdote, profeta, illuminato.",
-   "unfavorable": "Utopista, sognatore perso tra le nuvole e privo di senso pratico, entusiasta nutrito d'illusioni. Artista che concepisce il Bello ma non sa tradurlo in opere. Progetti irrealizzabili, voti generosi ma sterili. Amore non corrisposto."
+   "paragraphs": [
+    "L'anima liberata che avvolge il corpo. Misticità. Sacerdozio. L'uomo che entra in rapporto con Dio. Collaborazione alla Grande Opera della trasmutazione universale del male in bene. L'individuo che si libera dall'egoismo istintivo per elevarsi fino al divino. Sacrificio redentore. Attività dell'anima. Intervento a distanza. Telepatia.",
+    "Perfezione morale. Abnegazione. Oblio totale di se stessi. Dedizione. Disinteresse assoluto. Sacrificio volontario a beneficio di una causa elevata. Patriottismo.",
+    "Sacerdote, profeta, illuminato. Utopista, sognatore perso tra le nuvole e privo di senso pratico. Entusiasta nutrito d'illusione. Artista che concepisce il Bello, ma incapace di tradurlo in opere. Progetti irrealizzabili. Voti generosi ma sterili. Amore non condiviso."
+   ]
   },
   {
    "number": 13,
    "name": "La Morte",
-   "essence": "Il principio trasformatore che rinnova tutte le cose. L'inevitabile Necessità, il movimento eterno che si oppone a ogni arresto, quindi a ciò che sarebbe davvero morto. Liberazione, spiritualizzazione.",
-   "favorable": "Disillusione, penetrazione intellettuale, percezione della realtà spogliata di ogni apparenza, lucidità assoluta di giudizio. Iniziazione, distacco, ascetismo. Incorruttibilità; potere capace di rigenerare un ambiente corrotto. Trasformazione radicale, rinnovamento, eredità.",
-   "unfavorable": "Fine necessaria, fatalità; scacco di cui la vittima non è responsabile. Influenza dei morti, atavismo. Malinconia, lutti, tristezza, vecchiaia, decrepitezza, decomposizione, corruzione, dissoluzione."
+   "paragraphs": [
+    "Il Principio trasformatore che rinnova tutte le cose. L'ineluttabile Necessità. Il cammino fatale dell'evoluzione. Il movimento eterno che si oppone a ogni arresto, a ogni fissazione definitiva, dunque a ciò che sarebbe realmente morto. Lo Spirito di Progresso (Spirito Santo degli Gnostici). Il Paraclito consolatore, che affranca lo spirito dal giogo della materia. Liberazione. Spiritualizzazione. Smaterializzazione. Shiva.",
+    "Disillusione. Penetrazione intellettuale. Percezione della realtà spogliata di ogni scenario sensibile. Lucidità assoluta di giudizio. Iniziazione integrale. Morte iniziatica. Distacco. Ascetismo. Inflessibilità. Incorruttibilità. Potere trasmutatorio capace di rigenerare un ambiente corrotto. Padronanza.",
+    "Fine necessaria. Fatalità. Scacco di cui la vittima non è responsabile. Trasformazione radicale. Rinnovamento. Eredità. Influenza dei morti. Atavismo. Negromanzia. Spiritismo.",
+    "Malinconia, lutti, tristezza, vecchiaia, decrepitezza, decomposizione, corruzione, dissoluzione."
+   ]
   },
   {
    "number": 14,
    "name": "La Temperanza",
-   "essence": "La Vita universale e la sua circolazione incessante attraverso gli esseri. Il fluido che restituisce le forze spese, l'energia risanatrice della Natura. Rigenerazione, fontana di giovinezza.",
-   "favorable": "Serenità d'animo che eleva al di sopra delle miserie umane, indifferenza alle meschinità della vita. Equilibrio d'umore, calma, salute, regolarità degli scambi. Disinteresse, rassegnazione. Facilità di adattamento, duttilità, docilità.",
-   "unfavorable": "Freddezza, apatia, natura instabile e mutevole. Lasciarsi andare, abbandono, mancanza di ritegno. Passività, pigrizia, imprevidenza, spese sconsiderate, prodigalità."
+   "paragraphs": [
+    "La Vita universale; il suo movimento incessante, la sua circolazione attraverso gli esseri. Il fluido animatore che restituisce le forze spese. L'agente riparatore e ricostituente di ciò che si consuma e declina. L'energia medicatrice della Natura. Taumaturgia curativa basata sulla captazione e sul governo delle correnti vitali. Trasfusione di forza vitale, magnetismo curativo, medicina occulta o mistica. Trasmutazioni d'ordine vitale. Alchimia psichica. Rigenerazione. Misteri dell'acqua e del freddo. Miracoli. Fontana di Giovinezza.",
+    "Noncuranza filosofica, serenità di spirito che eleva al di sopra delle miserie umane. Indifferenza alle meschinità della vita. Eguaglianza d'umore, calma che rasserena, salute, buona circolazione, regolarità degli scambi, condizioni favorevoli al prolungamento della vita, disinteresse, impassibilità, rassegnazione.",
+    "Facilità di adattamento, duttilità, docilità. Sensibilità alle influenze esterne. Impressionabilità ricettiva. Freddezza, apatia, mobilità, natura instabile e mutevole. Riposo, vacanze, alternanze, cambiamento, lasciarsi andare, abbandono, scorrimento, mancanza di ritegno. Passività, pigrizia, imprevidenza, spese sconsiderate, prodigalità."
+   ]
   },
   {
    "number": 15,
    "name": "Il Diavolo",
-   "essence": "L'Anima del Mondo, serbatoio della vitalità di tutti gli esseri; la luce astrale degli occultisti. Le forze occulte legate all'animalità: istinto, inconscio inferiore, impulsività.",
-   "favorable": "Arti magiche, magnetismo umano, fascinazione. Suggestione, influenza esercitata in modo occulto, azione sull'inconscio altrui. Dominio delle masse, eloquenza che turba.",
-   "unfavorable": "Eccitazione degli appetiti, degli istinti grossolani e delle passioni vili. Demagogia, sovvertimento, disordine, squilibrio, agitazione, lussuria. Intrighi, macchinazioni, mezzi illeciti. Perversione, abuso, cupidigia in tutte le sue forme. Smoderatezza."
+   "paragraphs": [
+    "L'Anima del Mondo, considerata come il serbatoio della vitalità di tutti gli esseri. La luce astrale degli occultisti. L'elettricità vitale allo stato statico nella sua doppia polarizzazione attiva e passiva. Forze occulte legate all'animalità. Istinto, inconscio inferiore, subcoscienza, impulsività.",
+    "Arti magiche, stregoneria, malia, fascinazione, pratica del magnetismo umano. Suggestione, influenza esercitata occultamente. Azione sull'inconscio altrui. Dominio delle masse. Incantesimi, eloquenza conturbante. Eccitazione degli appetiti, degli istinti grossolani e delle passioni vili. Demagogia, rivoluzione, sconvolgimento.",
+    "Turbamento, squilibrio, disordine. Sovreccitazione, panico. Fregola, concupiscenza, lussuria, lubricità, isteria. Intrighi, macchinazioni, impiego di mezzi illeciti. Perversione. Abuso, cupidigia, smodatezza in tutte le loro forme."
+   ]
   },
   {
    "number": 16,
-   "name": "La Torre",
-   "essence": "Il Fuoco del Cielo. Materializzazione: l'egoismo radicale in azione, lo spirito imprigionato nella materia.",
-   "favorable": "Quando smette di essere sfavorevole, mette in guardia da ciò che minaccia: timore salutare, riserbo, prudenza che preserva da rischi sconsiderati; semplicità di spirito che distoglie dalle sciocchezze dotte, buon senso comune, la saggezza di Sancho Panza.",
-   "unfavorable": "Orgoglio, presunzione, inseguimento di chimere, avidità, megalomania, ambizioni insaziabili. Eccessi e abusi che spingono alla rivolta. Fallimento meritato di ogni impresa insensata, punizione degli eccessi commessi. Malattia, disorganizzazione, irrigidimento. Errore del presuntuoso che intraprende oltre le proprie forze e non sa fermarsi in tempo."
+   "name": "La Casa di Dio",
+   "paragraphs": [
+    "Materializzazione. Attrazione condensatrice. Egoismo radicale in azione. Accaparramento restrittivo. Spirito imprigionato nella materia. Costruzione vitale da cui risulta tutto l'organismo.",
+    "Orgoglio, presunzione, inseguimento di chimere. Materialismo che si attacca alle apparenze grossolane, avidità d'acquistare, mania delle ricchezze materiali. Megalomania, estensione abusiva di ciò che si possiede. Ambizioni e appetiti insaziabili. Conquiste smodate. Sfruttamento irragionevole. Eccessi e abusi che spingono alla rivolta e agli sconvolgimenti. Dogmatismo ristretto, fonte d'incredulità.",
+    "Alchimia ignorante dei soffiatori avidi d'oro volgare. Scacco meritato di ogni impresa insensata. Punizione risultante da eccessi commessi. Malattia, disorganizzazione, incrostazione, indurimento, pietrificazione di ciò che era duttile e vivo. Rovina degli imperi costituiti e mantenuti con la forza brutale. Crollo delle Chiese intolleranti che si proclamano infallibili. Errore del presuntuoso che intraprende al di sopra delle sue forze e non sa fermarsi al momento opportuno.",
+    "Quando questo arcano cessa d'essere sfavorevole, mette in guardia contro ciò di cui minaccia. Timore salutare, riserbo, timidezza che preserva da rischi sconsiderati; semplicità di spirito che distoglie dalle sciocchezze dotte, buon senso volgare, saggezza di Sancio Panza."
+   ]
   },
   {
    "number": 17,
    "name": "Le Stelle",
-   "essence": "La donna consolatrice che rialza l'uomo oppresso dalle lotte dell'esistenza. L'anima che unisce la Materia allo Spirito; la notte e i suoi misteri, il sonno e le sue rivelazioni. L'ideale che la vita tende a realizzare.",
-   "favorable": "Speranza, slancio, buonumore, coraggio che sopporta allegramente le miserie della vita. Poesia, belle arti, musica, sensibilità, tenerezza, compassione. Carattere facile, giovinezza, fascino. Fiducia, protezione occulta, premonizioni, presentimenti.",
-   "unfavorable": "Candore, ingenuità, ignoranza. Epicureismo, sensualità, fantasticheria, abbandono, negligenza. Rassegnazione, fatalismo. Curiosità indiscreta: Pandora e il suo vaso fatale."
+   "paragraphs": [
+    "La donna consolatrice che rialza l'uomo oppresso dalle lotte dell'esistenza. Eva a cui è promesso il Redentore. La vita ripartita alle creature. L'anima che collega la Materia allo Spirito. La Natura in attività. La notte e i suoi misteri. Il sonno e le sue rivelazioni. Immortalità. Destino, predestinazione. Ideale che la vita tende a realizzare. Bellezza oggettiva. Estetica. Culto del Bello. Religione della Vita, che santifica ciò che vi si riferisce. Ishtar.",
+    "Speranza, slancio, buonumore, valore che sopporta allegramente le miserie della vita. Idealizzazione della realtà. Poesia, belle arti, musica, sensibilità, affinamento, tenerezza, compassione. Adattamento alle necessità. Carattere facile.",
+    "Innocenza, candore, ingenuità, ignoranza. Giovinezza, fascino, seduzione, attrattiva. Epicureismo, sensualità, fantasticheria, abbandono, negligenza. Fiducia, rassegnazione, fatalismo.",
+    "Astrologia, influenze astrali, protezione occulta, intuizioni, premonizioni, presentimenti. Curiosità indiscreta. Pandora e il suo scrigno fatale."
+   ]
   },
   {
    "number": 18,
    "name": "La Luna",
-   "essence": "L'oggettività, le apparenze esteriori, la forma visibile: ciò che cade sotto i sensi. Il relativo, il teatro in cui si recita la vita umana. Le illusioni della materialità, Maya.",
-   "favorable": "Immaginazione, impressionabilità, veggenza, lucidità sonnambolica. Ritorno su se stessi, conversione. Viaggi per mare, navigazione, ricerche lunghe e difficili.",
-   "unfavorable": "Capricci, fantasie, stravaganze, errori e pregiudizi, pigrizia mentale, credulità, superstizione, falso sapere. Lavoro imposto, schiavitù materiale. Situazione equivoca, falsa sicurezza, pericoli, insidie. Adulazione, inganno, minacce vane."
+   "paragraphs": [
+    "L'oggettività. Le apparenze esteriori. La forma visibile. Ciò che cade sotto i sensi. Il contingente, il relativo, il teatro dove si recita la vita umana. Illusioni della materialità. Maya.",
+    "Immaginazione, capricci, ghiribizzi, fantasie, stravaganze, errori e pregiudizi, pigrizia di spirito, credulità, superstizione. Curiosità indiscrete, falso sapere, visionarismo. Passività intellettuale, impressionabilità immaginativa, veggenza, lucidità sonnambolica. Ritorno su se stessi, conversione.",
+    "Viaggi per acqua, navigazione, ricerche lunghe e difficili. Lavoro imposto. Schiavitù materiale. Situazione equivoca. Falsa sicurezza, pericoli, insidie. Adulazione, inganno, minacce vane. La luna rossa e i suoi effetti disastrosi. Temperamento linfatico, idropisia."
+   ]
   },
   {
    "number": 19,
    "name": "Il Sole",
-   "essence": "La luce primordiale che ordina il caos, il Verbo che illumina ogni uomo che viene al mondo. La chiarezza spirituale che dissipa l'oscurità: Apollo vincitore del serpente Pitone.",
-   "favorable": "Il vero sapere, illuminazione geniale. Poesia, belle arti. Fraternità, armonia, pace, amicizia, buona intesa. Nobiltà, generosità, affetto, grandezza d'animo. L'Eden ritrovato: felicità calma e durevole, matrimonio, gioie coniugali, chiarezza di giudizio. Gloria, onori, celebrità.",
-   "unfavorable": "Attaccamento a ciò che brilla, vanità, bisogno di farsi ammirare, desiderio di apparire, frivolezza, posa, mancanza di senso pratico. Idealismo doloroso, incompatibile con la realtà brutale. Irritabilità, suscettibilità."
+   "paragraphs": [
+    "La luce primordiale ordinatrice del caos. Il Verbo che illumina ogni uomo che viene in questo mondo. La Ragione sovrumana illuminatrice di tutti gli spiriti. La chiarezza spirituale che dissipa l'oscurità in seno alla quale ci dibattiamo. Apollo vittorioso sul Serpente Pitone. Il vero sapere davanti al quale svaniscono le fantasmagorie del visionarismo. Illuminazione geniale. Poesia, Belle Arti.",
+    "Fraternità, armonia, pace, amicizia, buona intesa, arbitrato. Nobiltà, generosità, affetto, grandezza d'animo. Eden ritrovato, felicità calma e duratura, matrimonio, gioie coniugali, chiarezza di giudizio. Gusti e talenti artistici.",
+    "Gloria, onori, celebrità. Attaccamento a ciò che brilla, vanità, bisogno di farsi ammirare, desiderio di apparire, frivolezza, affettazione, posa, mancanza di senso pratico. Idealismo doloroso, incompatibile con il senso della realtà brutale. Artista o poeta condannato a vivere nella miseria e il cui merito sarà riconosciuto solo dopo la sua morte. Irritabilità, suscettibilità."
+   ]
   },
   {
    "number": 20,
    "name": "Il Giudizio",
-   "essence": "Lo Spirito Santo: il soffio ispiratore che feconda l'intelligenza perché discerna la verità. Risveglio alla vita spirituale; l'uomo in comunicazione con lo spirito divino.",
-   "favorable": "Ispirazione, divinazione, chiaroveggenza, previsione dell'avvenire, genio letterario o artistico. Entusiasmo, elevazione dello spirito, ritorno alle tradizioni dimenticate. Guarigione, ristabilimento della salute fisica, morale e intellettuale. Liberazione, riparazione dei torti subiti, giudizio equo dei posteri. Reputazione, fama.",
-   "unfavorable": "Clamore, rumore, pubblicità, chiasso assordante. Predicazione, propaganda. Esaltazione, ebbrezza, sovreccitazione naturale o artificiale, mancanza di ponderazione."
+   "paragraphs": [
+    "Lo Spirito Santo. Il soffio ispiratore che feconda l'intelligenza per farle discernere la verità. Penetrazione spirituale, comprensione, assimilazione del pensiero interiore, esoterismo, spiritualizzazione della materia. Liberazione dai legami corporei. Sublimazione alchemica. Risveglio alla vita spirituale e partecipazione a questa vita, che è quella del grande essere umano collettivo e permanente.",
+    "Ispirazione. L'uomo in comunicazione con lo spirito divino. Divinazione, profetismo, chiaroveggenza spirituale, previsione dell'avvenire, genio letterario o artistico. Entusiasmo, pietà, religione spirituale, elevazione dello spirito e dell'anima. Potere d'evocazione che fa rivivere il passato spirituale. Resurrezione dei morti degni d'essere richiamati alla vita. Ritorno alle tradizioni dimenticate. Rinascita di Hiram, ringiovanito nella persona del nuovo Maestro. Seconda morte, porta dell'iniziazione integrale.",
+    "Ripresa, guarigione, ristabilimento della salute fisica, morale, intellettuale. Liberazione, affrancamento, riparazione di torti subiti. Giudizio equo della posterità. Reputazione, rinomanza, risonanza, rumore, pubblicità, réclame, chiasso assordante. Predicazione, apostolato, propaganda.",
+    "Esaltazione, ebbrezza, sovreccitazione naturale o artificiale, mancanza di ponderazione. Estasi dionisiaca."
+   ]
   },
   {
    "number": 21,
    "name": "Il Mondo",
-   "essence": "Il Cosmo, l'Universo ordinato, il Regno di Dio, il Tempio ideale compiuto. Totalità, reintegrazione, perfezione.",
-   "favorable": "Scienza integrale, sovrana potenza spirituale. Estasi, apoteosi, ricompensa. Incorruttibilità, integrità assoluta. Riuscita completa, compimento, coronamento dell'opera intrapresa. Ambiente favorevole al risultato decisivo; beneficio tratto dalla collettività.",
-   "unfavorable": "Tutto o niente. Uomo di Stato, ministro, alto funzionario ostile. Ostacolo esterno insormontabile."
+   "paragraphs": [
+    "Cosmo. Universo ordinato. Regno di Dio. Tempio ideale compiuto. Totalità. Reintegrazione. Perfezione.",
+    "Scienza integrale. Sovrana potenza spirituale. Estasi, Apoteosi, Ricompensa. Incorruttibilità. Integrità assoluta. Riuscita completa. Compimento. Coronamento dell'opera intrapresa. Atmosfera. Ambiente favorevole al risultato decisivo: tutto o niente, cerchia. Beneficio tratto dalla collettività. Uomo di Stato, ministro, alto funzionario ostile. Ostacolo esterno insormontabile."
+   ]
   }
  ]
 }

@@ -5,9 +5,9 @@ Telegram bot for a group of friends: tarot cards and I Ching, built from plugins
 | Command | What it does |
 |---|---|
 | `/tarocco` | Draws one of the 22 Major Arcana (Rider-Waite-Smith), with its Italian name |
-| `/wirth` | One arcanum of Oswald Wirth's deck, upright (favourable sense) or reversed (unfavourable), with Wirth's meaning |
-| `/stesa <domanda>` | Wirth's cross: affirmation, negation, discussion, solution and the computed synthesis |
-| `/arcano` | Card of the day from Wirth's deck, the same for a person all day |
+| `/wirth` | One arcanum of Oswald Wirth's deck with Wirth's complete interpretation |
+| `/stesa <domanda>` | Wirth's cross (affirmation, negation, discussion, solution, synthesis) as an image; one button per place shows Wirth's text for that card |
+| `/arcano` | Card of the day from Wirth's deck (with his interpretation), the same for a person all day |
 | `/esagramma <domanda>` | An I Ching hexagram for the question (yarrow-stalk method), drawn with its trigrams; buttons reveal moving lines and transformation |
 | `/profetizza <domanda>` | Hexagram, moving lines and the hexagram it changes into, in one message |
 | `/help` | Generated list of commands |
@@ -19,7 +19,8 @@ In groups commands also work as `/tarocco@botname`. Each user has a short cooldo
 - Rider-Waite-Smith images (1909, public domain).
 - Oswald Wirth: the 1889 Major Arcana (BnF scans via Wikimedia Commons, public domain) and the
   "Interprétations divinatoires" of *Le Tarot des imagiers du Moyen Âge* (1927, public domain since
-  2014), translated into Italian in `eden/plugins/wirth/data/wirth.json`. The spread is the one Wirth
+  2014), translated into Italian literally and in full (paragraphs as in the book, footnotes omitted,
+  OCR doubts checked on the BnF scan) in `eden/plugins/wirth/data/wirth.json`. Nothing is added. The spread is the one Wirth
   describes in "La consultation du Tarot" (Fool = 22, sums above 22 reduced by adding the digits).
 
 ## Run

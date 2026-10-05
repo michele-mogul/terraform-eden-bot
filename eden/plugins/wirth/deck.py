@@ -1,13 +1,14 @@
-"""Oswald Wirth's tarot: the 22 Major Arcana of his 1889 deck and his divinatory meanings.
+"""Oswald Wirth's tarot: the 22 Major Arcana of his 1889 deck and his divinatory interpretations.
 
-Wirth reads every arcanum "in good or in bad part", from its highest sense down to vices and
-misfortunes (Le Tarot des imagiers du Moyen Âge, 1927). Eden draws a card upright or reversed to
-choose between the two. The spread is the one Wirth gives in "La consultation du Tarot".
+The texts are the "Interprétations divinatoires" of Le Tarot des imagiers du Moyen Âge (1927),
+translated literally and in full, one entry per paragraph of the book. The spread is the one Wirth
+gives in "La consultation du Tarot".
 """
 
 import html
 import json
 import random
+import re
 from dataclasses import dataclass
 from datetime import date
 from functools import lru_cache
@@ -16,15 +17,14 @@ from pathlib import Path
 HERE = Path(__file__).parent
 ROMAN = ("0 I II III IV V VI VII VIII IX X XI XII XIII XIV XV XVI XVII XVIII XIX XX XXI").split()
 FOOL_VALUE = 22   # the Fool is unnumbered and counts as 22 in the spread
+CAPTION_LIMIT = 1024
 
 
 @dataclass(frozen=True)
 class Card:
     number: int
     name: str
-    essence: str
-    favorable: str
-    unfavorable: str
+    paragraphs: tuple[str, ...]
 
     @property
     def path(self) -> Path:
@@ -40,68 +40,47 @@ class Card:
 
 
 @lru_cache(maxsize=1)
-def _data() -> dict:
-    return json.loads((HERE / "data" / "wirth.json").read_text(encoding="utf-8"))
-
-
 def deck() -> tuple[Card, ...]:
-    return tuple(Card(**c) for c in _data()["cards"])
+    data = json.loads((HERE / "data" / "wirth.json").read_text(encoding="utf-8"))
+    return tuple(Card(c["number"], c["name"], tuple(c["paragraphs"])) for c in data["cards"])
 
 
 def by_number(n: int) -> Card:
     return deck()[n]
 
 
-@dataclass(frozen=True)
-class Draw:
-    card: Card
-    reversed: bool
+def draw(rng: random.Random) -> Card:
+    return rng.choice(deck())
 
 
-def draw(rng: random.Random) -> Draw:
-    return Draw(rng.choice(deck()), rng.random() < 0.5)
-
-
-def card_of_the_day(user_id: int, day: date) -> Draw:
+def card_of_the_day(user_id: int, day: date) -> Card:
     """The same card for the same person all day long."""
     return draw(random.Random(f"eden arcano {user_id} {day.isoformat()}"))
 
 
 # ---------- Wirth's spread ----------
 
-# (emoji, name, what the position tells) in drawing order; the fifth is computed
-POSITIONS = (
-    ("➕", "Affermazione", "ciò che è favorevole, ciò che conviene fare, l'alleato"),
-    ("➖", "Negazione", "ciò che è ostile, da evitare o da temere"),
-    ("⚖️", "Discussione", "il partito da prendere, l'intervento decisivo"),
-    ("🎯", "Soluzione", "il risultato, alla luce del pro, del contro e soprattutto della Sintesi"),
-    ("✴️", "Sintesi", "ciò che conta di più, ciò da cui tutto dipende"),
-)
+# Wirth's names for the five places of the cross, in drawing order; the fifth is computed
+POSITIONS = (("Affermazione", "Pro"), ("Negazione", "Contro"), ("Discussione", "Giudice"),
+             ("Soluzione", "Sentenza"), ("Sintesi", ""))
 
 
-def synthesis(values: list[int]) -> tuple[Card, str]:
+def synthesis(values: list[int]) -> Card:
     """Sum of the four arcana (Fool = 22); above 22 its digits are added (theosophical reduction)."""
-    total = sum(values)
-    how = " + ".join(map(str, values)) + f" = {total}"
-    n = total
-    if total > 22:
-        n = sum(int(d) for d in str(total))
-        how += " → " + " + ".join(str(total)) + f" = {n}"
-    return by_number(0 if n == FOOL_VALUE else n), how
+    n = sum(values)
+    if n > 22:
+        n = sum(int(d) for d in str(n))
+    return by_number(0 if n == FOOL_VALUE else n)
 
 
-@dataclass(frozen=True)
-class Spread:
-    question: str
-    cards: tuple[Card, ...]   # affirmation, negation, discussion, solution, synthesis
-    how: str                  # how the synthesis was computed
+def spread_from_numbers(numbers: list[int]) -> tuple[Card, ...]:
+    drawn = [by_number(n) for n in numbers]
+    return (*drawn, synthesis([c.value for c in drawn]))
 
 
-def wirth_spread(question: str, rng: random.Random) -> Spread:
+def wirth_spread(rng: random.Random) -> tuple[Card, ...]:
     # Wirth reshuffles the whole deck before each draw, so a card can come out twice
-    drawn = [rng.choice(deck()) for _ in range(4)]
-    synth, how = synthesis([c.value for c in drawn])
-    return Spread(question, (*drawn, synth), how)
+    return spread_from_numbers([draw(rng).number for _ in range(4)])
 
 
 # ---------- text (Telegram HTML) ----------
@@ -110,36 +89,25 @@ def _e(text: str) -> str:
     return html.escape(text.strip(), quote=False)
 
 
-CREDIT = "<i>Significati da Oswald Wirth, Le Tarot des imagiers du Moyen Âge (1927)</i>"
+def position_label(i: int) -> str:
+    name, role = POSITIONS[i]
+    return f"{name} · {role}" if role else name
 
 
-def card_caption(d: Draw, head: str = "🃏") -> str:
-    c = d.card
-    sense = ("🙃 rovesciata · in senso sfavorevole" if d.reversed else "☀️ dritta · in senso favorevole")
-    meaning = c.unfavorable if d.reversed else c.favorable
-    return (f"{head} <b>{_e(c.title)}</b>\n<i>{sense}</i>\n\n"
-            f"<i>{_e(c.essence)}</i>\n\n{_e(meaning)}\n\n{CREDIT}")
+def card_text(c: Card, head: str = "") -> str:
+    return f"{head}<b>{_e(c.title)}</b>\n\n" + "\n\n".join(_e(p) for p in c.paragraphs)
 
 
-def spread_caption(s: Spread) -> str:
-    q = f"\n❓ <i>{_e(s.question)}</i>" if s.question.strip() else ""
-    legend = "\n".join(f"{e} {name}: {_e(c.title)}" for (e, name, _), c in zip(POSITIONS, s.cards))
-    return f"🔮 <b>La croce di Wirth</b>{q}\n\n{legend}"
+def plain_length(text: str) -> int:
+    """Length as Telegram counts it: without tags, entities decoded."""
+    return len(html.unescape(re.sub(r"<[^>]+>", "", text)))
 
 
-def spread_text(s: Spread) -> str:
-    out = []
-    for i, ((emoji, name, role), c) in enumerate(zip(POSITIONS, s.cards)):
-        if i == 0:
-            body = _e(c.favorable)
-        elif i == 1:
-            body = _e(c.unfavorable)
-        elif i == 4:
-            body = _e(c.essence)
-        else:   # the diviner weighs both senses
-            body = f"☀️ {_e(c.favorable)}\n\n🌑 {_e(c.unfavorable)}"
-        note = f" · {s.how}" if i == 4 else ""
-        out.append(f"{emoji} <b>{name}</b> — {_e(c.title)}\n<i>{role}{note}</i>\n"
-                   f"<blockquote expandable>{body}</blockquote>")
-    q = f"❓ <i>{_e(s.question)}</i>\n\n" if s.question.strip() else ""
-    return q + "\n".join(out) + "\n" + CREDIT
+def fits_caption(text: str) -> bool:
+    return plain_length(text) <= CAPTION_LIMIT
+
+
+def spread_caption(question: str, cards: tuple[Card, ...]) -> str:
+    q = f"❓ <i>{_e(question)}</i>\n\n" if question.strip() else ""
+    legend = "\n".join(f"<b>{position_label(i)}</b>: {_e(c.title)}" for i, c in enumerate(cards))
+    return q + legend
