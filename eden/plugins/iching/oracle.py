@@ -164,10 +164,3 @@ def relating_text(r: Reading) -> str:
     if not r.relating:
         return "Nessuna linea mobile."
     return "↪ <b>Si trasforma in</b>\n\n" + describe(r.relating)
-
-
-def prophecy_text(r: Reading) -> str:
-    out = [hexagram_text(r), moving_text(r)]
-    if r.relating:
-        out.append(relating_text(r))
-    return "\n\n〰️〰️〰️\n\n".join(out)
