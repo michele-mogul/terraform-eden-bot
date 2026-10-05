@@ -1,11 +1,12 @@
 """I Ching: a hexagram for a question, or a full prophecy with moving lines."""
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.constants import ParseMode
+from telegram.constants import ChatAction, ParseMode
 from telegram.ext import ContextTypes
 
 from eden.core.plugin import Callback, Command, Plugin
-from eden.core.ui import CURRENT, only_owner, pressed_is_current, suspense
+from eden.core.ui import CURRENT, fits_caption, only_owner, pressed_is_current, suspense
+from eden.plugins.iching.images import figure
 from eden.plugins.iching.oracle import (Reading, cast, from_values, header, hexagram_text,
                                         moving_text, relating_text)
 
@@ -19,9 +20,9 @@ def _question(context: ContextTypes.DEFAULT_TYPE) -> str:
 
 def view_text(r: Reading, view: str) -> str:
     if view == "lines":
-        return header(r) + "\n\n" + moving_text(r)
+        return header(r) + moving_text(r)
     if view == "rel":
-        return header(r) + "\n\n" + relating_text(r)
+        return header(r) + relating_text(r)
     return hexagram_text(r)
 
 
@@ -37,21 +38,27 @@ def keyboard(r: Reading, owner: int, current: str = "hex") -> InlineKeyboardMark
 
 
 async def esagramma(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Only the hexagram, in one message."""
+    """The hexagram as a picture, its text as caption (or just below when too long)."""
     r = cast(_question(context))
-    await suspense(update, context)
-    await update.effective_message.reply_text(hexagram_text(r), parse_mode=ParseMode.HTML)
+    await suspense(update, context, ChatAction.UPLOAD_PHOTO)
+    text = hexagram_text(r)
+    if fits_caption(text):
+        await update.effective_message.reply_photo(figure(r), caption=text, parse_mode=ParseMode.HTML)
+    else:
+        photo = await update.effective_message.reply_photo(figure(r))
+        await photo.reply_text(text, parse_mode=ParseMode.HTML)
 
 
 async def profetizza(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """The full reading in one message whose buttons switch between its pages."""
+    """The picture, then one message whose buttons switch between the pages of the reading."""
     r = cast(_question(context))
-    await suspense(update, context)
+    await suspense(update, context, ChatAction.UPLOAD_PHOTO)
+    photo = await update.effective_message.reply_photo(figure(r))
     text = hexagram_text(r)
     if not r.moving:
         text += "\n\n" + moving_text(r)
-    await update.effective_message.reply_text(text, parse_mode=ParseMode.HTML,
-                                              reply_markup=keyboard(r, update.effective_user.id))
+    await photo.reply_text(text, parse_mode=ParseMode.HTML,
+                           reply_markup=keyboard(r, update.effective_user.id))
 
 
 async def on_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

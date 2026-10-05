@@ -1,6 +1,8 @@
 """Small helpers shared by plugins."""
 
 import asyncio
+import html
+import re
 
 from telegram import Update
 from telegram.constants import ChatAction
@@ -40,3 +42,15 @@ def pressed_is_current(query) -> bool:
 
 
 CURRENT = "▸ "   # marks the view shown in a message that changes in place
+
+
+CAPTION_LIMIT = 1024   # Telegram's limit for a photo caption, counted without tags
+
+
+def plain_length(text: str) -> int:
+    """Length as Telegram counts it: without tags, entities decoded."""
+    return len(html.unescape(re.sub(r"<[^>]+>", "", text)))
+
+
+def fits_caption(text: str) -> bool:
+    return plain_length(text) <= CAPTION_LIMIT
