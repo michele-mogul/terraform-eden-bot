@@ -108,8 +108,9 @@ def test_from_values_rebuilds_the_same_reading():
         assert from_values(r.values) == r
 
 
-def _query(data, markup, user=42, asked="/esagramma amore?"):
-    message = SimpleNamespace(reply_markup=markup, reply_to_message=SimpleNamespace(text=asked))
+def _query(data, markup, user=42, shown="❓ amore & <odio>?\n\n6 ━━━"):
+    # as Telegram returns it: plain text, no reply_to_message in private chats
+    message = SimpleNamespace(reply_markup=markup, text=shown, reply_to_message=None)
     query = SimpleNamespace(data=data, message=message, answer=AsyncMock(),
                             from_user=SimpleNamespace(id=user), edit_message_text=AsyncMock())
     return SimpleNamespace(callback_query=query), query
@@ -126,7 +127,7 @@ def test_buttons_change_one_message_and_only_for_the_asker():
     update, query = _query(buttons[1].callback_data, markup)            # "Linee mobili"
     asyncio.run(iching.on_button(update, None))
     text, kwargs = query.edit_message_text.call_args.args[0], query.edit_message_text.call_args.kwargs
-    assert "amore?" in text and "All'inizio un nove significa:" in text and "<code>" in text
+    assert "❓ <i>amore &amp; &lt;odio&gt;?</i>" in text and "All'inizio un nove significa:" in text and "<code>" in text
     assert [b.text.startswith("▸ ") for b in kwargs["reply_markup"].inline_keyboard[0]] == [False, True, False]
 
     update, query = _query(buttons[2].callback_data, markup, user=7)    # someone else

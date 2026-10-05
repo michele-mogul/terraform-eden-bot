@@ -62,9 +62,10 @@ async def on_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if pressed_is_current(query):
         await query.answer()
         return
-    # The question is in the command this message answers
-    asked = query.message.reply_to_message
-    question = asked.text.partition(" ")[2].strip() if asked and asked.text else ""
+    # The question is the first line of the message itself ("❓ ..."); in private chats the
+    # reading is not a reply to the command, so it cannot be read from there
+    first = (query.message.text or "").split("\n", 1)[0]
+    question = first.removeprefix("❓").strip() if first.startswith("❓") else ""
     r = from_values([int(v) for v in values], question)
     await query.answer()
     await query.edit_message_text(view_text(r, view), parse_mode=ParseMode.HTML,
