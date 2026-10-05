@@ -17,7 +17,7 @@ DATA = Path(__file__).parent / "data" / "iching.json"
 
 @lru_cache(maxsize=1)
 def hexagrams() -> list[dict]:
-    """The 64 hexagrams: number, names, character, lines, judgement, images, linesDescription."""
+    """The 64 hexagrams: number, character, lines, Wilhelm's name and texts in Italian."""
     return json.loads(DATA.read_text(encoding="utf-8"))["hexagrams"]
 
 
@@ -84,14 +84,17 @@ def cast(question: str, rng: random.Random | None = None, now: datetime | None =
 
 # ---------- text (Telegram HTML) ----------
 
-# Trigrams by their lines, bottom to top: symbol and the Italian name of their image
+# Trigrams by their lines, bottom to top: symbol and Wilhelm's name, attribute and image
 TRIGRAMS = {
-    (1, 1, 1): ("☰", "Cielo"), (0, 0, 0): ("☷", "Terra"), (1, 0, 0): ("☳", "Tuono"),
-    (0, 1, 0): ("☵", "Acqua"), (0, 0, 1): ("☶", "Monte"), (0, 1, 1): ("☴", "Vento"),
-    (1, 0, 1): ("☲", "Fuoco"), (1, 1, 0): ("☱", "Lago"),
+    (1, 1, 1): ("☰", "Kiën, il creativo, il cielo"), (0, 0, 0): ("☷", "Kun, il ricettivo, la terra"),
+    (1, 0, 0): ("☳", "Dschen, l'eccitante, il tuono"), (0, 1, 0): ("☵", "Kan, l'abissale, l'acqua"),
+    (0, 0, 1): ("☶", "Gen, il tener fermo, il monte"), (0, 1, 1): ("☴", "Sun, il mite, il vento"),
+    (1, 0, 1): ("☲", "Li, l'aderente, il fuoco"), (1, 1, 0): ("☱", "Dui, il sereno, il lago"),
 }
 YANG, YIN = "━━━━━━━━━", "━━━   ━━━"
 MARK = {6: "✕", 9: "○"}             # old yin and old yang: the moving lines
+VALUE = {6: "sei", 9: "nove"}
+PLACE = {2: "secondo", 3: "terzo", 4: "quarto", 5: "quinto"}
 
 
 def _e(text: str) -> str:
@@ -100,7 +103,17 @@ def _e(text: str) -> str:
 
 def trigrams(h: dict) -> str:
     top, bottom = TRIGRAMS[tuple(h["lines"][3:])], TRIGRAMS[tuple(h["lines"][:3])]
-    return f"{top[0]} {top[1]} sopra · {bottom[0]} {bottom[1]} sotto"
+    return f"sopra: {top[0]} {top[1]}\nsotto: {bottom[0]} {bottom[1]}"
+
+
+def line_heading(position: int, value: int) -> str:
+    """Wilhelm's heading of a line, e.g. "Nove al secondo posto significa:"."""
+    v = VALUE[value]
+    if position == 1:
+        return f"All'inizio un {v} significa:"
+    if position == 6:
+        return f"In alto un {v} significa:"
+    return f"{v.capitalize()} al {PLACE[position]} posto significa:"
 
 
 def figure(r: Reading) -> str:
@@ -116,12 +129,12 @@ def figure(r: Reading) -> str:
 
 
 def title(h: dict) -> str:
-    return f"<b>{h['character']} {h['number']} · {_e(', '.join(h['names']))}</b>"
+    return f"<b>{h['character']} {h['number']} · {_e(h['wilhelm'])} · {_e(h['name'])}</b>"
 
 
 def describe(h: dict) -> str:
-    return (f"{title(h)}\n<i>{trigrams(h)}</i>\n\n"
-            f"<b>Giudizio</b>\n{_e(h['judgement'])}\n\n<b>Immagine</b>\n{_e(h['images'])}")
+    return (f"{title(h)}\n<i>{_e(trigrams(h))}</i>\n\n"
+            f"<b>Il giudizio</b>\n{_e(h['judgement'])}\n\n<b>L'immagine</b>\n{_e(h['image'])}")
 
 
 def header(r: Reading) -> str:
@@ -135,17 +148,21 @@ def hexagram_text(r: Reading) -> str:
 
 def moving_text(r: Reading) -> str:
     if not r.moving:
-        return "Nessuna linea mobile: la situazione è stabile."
-    desc = r.primary["linesDescription"]
-    out = [f"<b>Linee mobili di {r.primary['character']} {r.primary['number']}</b>"]
+        return "Nessuna linea mobile."
+    h = r.primary
+    out = [f"<b>Linee mobili di {h['character']} {h['number']}</b>"]
     for n in r.moving:
-        out.append(f"\n{MARK[r.values[n - 1]]} <b>Linea {n}</b>\n{_e(desc[n - 1]['meaning'])}")
+        v = r.values[n - 1]
+        out.append(f"\n{MARK[v]} <b>{line_heading(n, v)}</b>\n{_e(h['lineTexts'][n - 1])}")
+    if len(r.moving) == 6 and h.get("allLines"):   # only 1 and 2: all nines, all sixes
+        v = r.values[0]
+        out.append(f"\n<b>Se appaiono soltanto {VALUE[v]}, ciò significa:</b>\n{_e(h['allLines'])}")
     return "\n".join(out)
 
 
 def relating_text(r: Reading) -> str:
     if not r.relating:
-        return "Nessuna linea mobile: l'esagramma non si trasforma."
+        return "Nessuna linea mobile."
     return "↪ <b>Si trasforma in</b>\n\n" + describe(r.relating)
 
 

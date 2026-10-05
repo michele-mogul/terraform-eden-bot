@@ -17,7 +17,8 @@ def test_data_has_64_hexagrams_with_consistent_lines():
     assert sorted(h["number"] for h in hs) == list(range(1, 65))
     assert len({tuple(h["lines"]) for h in hs}) == 64
     assert all(h["binary"] == "".join(map(str, reversed(h["lines"]))) for h in hs)
-    assert all(len(h["linesDescription"]) == 6 for h in hs)
+    assert all(len(h["lineTexts"]) == 6 and h["judgement"] and h["image"] and h["name"] for h in hs)
+    assert [h["number"] for h in hs if h["allLines"]] == [1, 2]
 
 
 def test_yarrow_line_values_and_probabilities():
@@ -49,7 +50,7 @@ def test_prophecy_text_fits_a_telegram_message():
     rng = random.Random(3)
     for _ in range(300):
         text = prophecy_text(cast("una domanda", rng=rng))
-        assert "Giudizio" in text and len(text) < 4096
+        assert "Il giudizio" in text and len(text) < 4096
 
 
 class _Tags(HTMLParser):
@@ -81,8 +82,9 @@ def test_texts_are_valid_telegram_html():
 def test_trigrams_match_the_data_for_all_64():
     for h in hexagrams():
         # the data's trigram numbers follow the trigram list; our table is keyed by lines
-        assert trigrams(h).startswith(TRIGRAMS[tuple(h["lines"][3:])][0])
-    assert trigrams(by_lines([1, 1, 1, 0, 0, 0])) == "☷ Terra sopra · ☰ Cielo sotto"   # 11 Peace
+        assert trigrams(h).startswith("sopra: " + TRIGRAMS[tuple(h["lines"][3:])][0])
+    assert trigrams(by_lines([1, 1, 1, 0, 0, 0])) == ("sopra: ☷ Kun, il ricettivo, la terra\n"
+                                                      "sotto: ☰ Kiën, il creativo, il cielo")   # 11
 
 
 def test_figure_is_drawn_top_down_with_moving_marks_and_relating():
@@ -120,7 +122,7 @@ def test_buttons_change_one_message_and_only_for_the_asker():
     update, query = _query(buttons[1].callback_data, markup)            # "Linee mobili"
     asyncio.run(iching.on_button(update, None))
     text, kwargs = query.edit_message_text.call_args.args[0], query.edit_message_text.call_args.kwargs
-    assert "amore?" in text and "Linea 1" in text and "<code>" in text
+    assert "amore?" in text and "All'inizio un nove significa:" in text and "<code>" in text
     assert [b.text.startswith("▸ ") for b in kwargs["reply_markup"].inline_keyboard[0]] == [False, True, False]
 
     update, query = _query(buttons[2].callback_data, markup, user=7)    # someone else
@@ -131,3 +133,13 @@ def test_buttons_change_one_message_and_only_for_the_asker():
     update, query = _query(buttons[0].callback_data, markup)            # the view already shown
     asyncio.run(iching.on_button(update, None))
     query.edit_message_text.assert_not_called()
+
+
+def test_line_headings_and_all_nines():
+    from eden.plugins.iching.oracle import line_heading, moving_text
+    assert line_heading(1, 9) == "All'inizio un nove significa:"
+    assert line_heading(3, 6) == "Sei al terzo posto significa:"
+    assert line_heading(6, 6) == "In alto un sei significa:"
+    text = moving_text(from_values([9] * 6))
+    assert "Se appaiono soltanto nove" in text and "draghi" in text
+    assert moving_text(from_values([7, 8, 7, 8, 7, 8])) == "Nessuna linea mobile."
