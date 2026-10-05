@@ -7,7 +7,7 @@ from telegram.ext import ContextTypes
 from eden.core.plugin import Callback, Command, Plugin
 from eden.core.ui import CURRENT, only_owner, pressed_is_current, suspense
 from eden.plugins.iching.oracle import (Reading, cast, from_values, header, hexagram_text,
-                                        moving_text, prophecy_text, relating_text)
+                                        moving_text, relating_text)
 
 PREFIX = "iching"
 VIEWS = {"hex": "☯️ Esagramma", "lines": "📜 Linee mobili", "rel": "↪ Trasformazione"}
@@ -37,6 +37,14 @@ def keyboard(r: Reading, owner: int, current: str = "hex") -> InlineKeyboardMark
 
 
 async def esagramma(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Only the hexagram, in one message."""
+    r = cast(_question(context))
+    await suspense(update, context)
+    await update.effective_message.reply_text(hexagram_text(r), parse_mode=ParseMode.HTML)
+
+
+async def profetizza(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """The full reading in one message whose buttons switch between its pages."""
     r = cast(_question(context))
     await suspense(update, context)
     text = hexagram_text(r)
@@ -44,12 +52,6 @@ async def esagramma(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         text += "\n\n" + moving_text(r)
     await update.effective_message.reply_text(text, parse_mode=ParseMode.HTML,
                                               reply_markup=keyboard(r, update.effective_user.id))
-
-
-async def profetizza(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    r = cast(_question(context))
-    await suspense(update, context)
-    await update.effective_message.reply_text(prophecy_text(r), parse_mode=ParseMode.HTML)
 
 
 async def on_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -74,7 +76,8 @@ PLUGIN = Plugin(
     description="☯️ I Ching",
     commands=(
         Command("esagramma", "Estrai un esagramma per la tua domanda", esagramma, "<domanda>"),
-        Command("profetizza", "Esagramma, linee mobili e trasformazione", profetizza, "<domanda>"),
+        Command("profetizza", "Esagramma, linee mobili e trasformazione, da sfogliare", profetizza,
+                "<domanda>"),
     ),
     callbacks=(Callback(PREFIX, on_button),),
 )

@@ -9,7 +9,7 @@ from unittest.mock import AsyncMock
 
 from eden.plugins import iching
 from eden.plugins.iching.oracle import (TRIGRAMS, by_lines, cast, cast_line, figure, from_values,
-                                        hexagram_text, hexagrams, prophecy_text, trigrams)
+                                        hexagram_text, hexagrams, trigrams)
 
 
 def test_data_has_64_hexagrams_with_consistent_lines():
@@ -46,11 +46,15 @@ def test_relating_hexagram_flips_exactly_the_moving_lines():
             assert r.relating is None
 
 
-def test_prophecy_text_fits_a_telegram_message():
+def _pages(r):
+    return [iching.view_text(r, v) for v in iching.VIEWS]
+
+
+def test_every_page_fits_a_telegram_message():
     rng = random.Random(3)
     for _ in range(300):
-        text = prophecy_text(cast("una domanda", rng=rng))
-        assert "Il giudizio" in text and len(text) < 4096
+        pages = _pages(cast("x" * 200, rng=rng))
+        assert "Il giudizio" in pages[0] and all(len(p) < 4096 for p in pages)
 
 
 class _Tags(HTMLParser):
@@ -74,7 +78,7 @@ def test_texts_are_valid_telegram_html():
     for q in ["<script> & co", "", "amore?"]:
         for _ in range(100):
             t = _Tags()
-            t.feed(prophecy_text(cast(q, rng=rng)))
+            t.feed("".join(_pages(cast(q, rng=rng))))
             assert t.stack == []
     assert "&lt;script&gt; &amp; co" in hexagram_text(cast("<script> & co", rng=rng))
 
