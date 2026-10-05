@@ -37,28 +37,24 @@ def keyboard(r: Reading, owner: int, current: str = "hex") -> InlineKeyboardMark
         for view, label in VIEWS.items()]])
 
 
-async def esagramma(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """The hexagram as a picture, its text as caption (or just below when too long)."""
+async def reading(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """The hexagram picture with the reading as caption; buttons switch its pages in place.
+
+    When a page is too long for a caption, the pages go in a text message below the picture.
+    """
     r = cast(_question(context))
     await suspense(update, context, ChatAction.UPLOAD_PHOTO)
-    text = hexagram_text(r)
-    if fits_caption(text):
-        await update.effective_message.reply_photo(figure(r), caption=text, parse_mode=ParseMode.HTML)
+    first = hexagram_text(r)
+    if not r.moving:
+        first += "\n\n" + moving_text(r)
+    pages = [view_text(r, v) for v in VIEWS] if r.moving else [first]
+    markup = keyboard(r, update.effective_user.id)
+    if all(fits_caption(p) for p in pages):
+        await update.effective_message.reply_photo(figure(r), caption=first, parse_mode=ParseMode.HTML,
+                                                   reply_markup=markup)
     else:
         photo = await update.effective_message.reply_photo(figure(r))
-        await photo.reply_text(text, parse_mode=ParseMode.HTML)
-
-
-async def profetizza(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """The picture, then one message whose buttons switch between the pages of the reading."""
-    r = cast(_question(context))
-    await suspense(update, context, ChatAction.UPLOAD_PHOTO)
-    photo = await update.effective_message.reply_photo(figure(r))
-    text = hexagram_text(r)
-    if not r.moving:
-        text += "\n\n" + moving_text(r)
-    await photo.reply_text(text, parse_mode=ParseMode.HTML,
-                           reply_markup=keyboard(r, update.effective_user.id))
+        await photo.reply_text(first, parse_mode=ParseMode.HTML, reply_markup=markup)
 
 
 async def on_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -69,23 +65,28 @@ async def on_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if pressed_is_current(query):
         await query.answer()
         return
-    # The question is the first line of the message itself ("❓ ..."); in private chats the
+    message = query.message
+    shown = (message.caption if message.photo else message.text) or ""
+    # The question is the first line of the reading itself ("❓ ..."); in private chats the
     # reading is not a reply to the command, so it cannot be read from there
-    first = (query.message.text or "").split("\n", 1)[0]
+    first = shown.split("\n", 1)[0]
     question = first.removeprefix("❓").strip() if first.startswith("❓") else ""
     r = from_values([int(v) for v in values], question)
     await query.answer()
-    await query.edit_message_text(view_text(r, view), parse_mode=ParseMode.HTML,
-                                  reply_markup=keyboard(r, int(owner), view))
+    text, markup = view_text(r, view), keyboard(r, int(owner), view)
+    if message.photo:
+        await query.edit_message_caption(caption=text, parse_mode=ParseMode.HTML, reply_markup=markup)
+    else:
+        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=markup)
 
 
 PLUGIN = Plugin(
     name="iching",
     description="☯️ I Ching",
     commands=(
-        Command("esagramma", "Estrai un esagramma per la tua domanda", esagramma, "<domanda>"),
-        Command("profetizza", "Esagramma, linee mobili e trasformazione, da sfogliare", profetizza,
+        Command("esagramma", "Esagramma, linee mobili e trasformazione per la tua domanda", reading,
                 "<domanda>"),
+        Command("profetizza", "Come /esagramma", reading, "<domanda>"),
     ),
     callbacks=(Callback(PREFIX, on_button),),
 )

@@ -108,11 +108,14 @@ def test_from_values_rebuilds_the_same_reading():
         assert from_values(r.values) == r
 
 
-def _query(data, markup, user=42, shown="❓ amore & <odio>?\n\n6 ━━━"):
-    # as Telegram returns it: plain text, no reply_to_message in private chats
-    message = SimpleNamespace(reply_markup=markup, text=shown, reply_to_message=None)
+def _query(data, markup, user=42, shown="❓ amore & <odio>?\n\n䷀ 1", photo=False):
+    # as Telegram returns it: plain text (or caption), no reply_to_message in private chats
+    message = SimpleNamespace(reply_markup=markup, reply_to_message=None,
+                              photo=["p"] if photo else None,
+                              caption=shown if photo else None, text=None if photo else shown)
     query = SimpleNamespace(data=data, message=message, answer=AsyncMock(),
-                            from_user=SimpleNamespace(id=user), edit_message_text=AsyncMock())
+                            from_user=SimpleNamespace(id=user), edit_message_text=AsyncMock(),
+                            edit_message_caption=AsyncMock())
     return SimpleNamespace(callback_query=query), query
 
 
@@ -148,3 +151,13 @@ def test_line_headings_and_all_nines():
     text = moving_text(from_values([9] * 6))
     assert "Se appaiono soltanto nove" in text and "draghi" in text
     assert moving_text(from_values([7, 8, 7, 8, 7, 8])) == "Nessuna linea mobile."
+
+
+def test_buttons_edit_the_caption_of_the_picture():
+    r = from_values([9, 7, 8, 7, 8, 6])
+    buttons = iching.keyboard(r, 42).inline_keyboard[0]
+    update, query = _query(buttons[2].callback_data, iching.keyboard(r, 42), photo=True)
+    asyncio.run(iching.on_button(update, None))
+    query.edit_message_text.assert_not_called()
+    caption = query.edit_message_caption.call_args.kwargs["caption"]
+    assert caption.startswith("❓ <i>amore &amp; &lt;odio&gt;?</i>") and "Si trasforma in" in caption
