@@ -5,14 +5,20 @@ import logging
 
 from telegram import BotCommand, Update
 from telegram.constants import ParseMode
-from telegram.ext import Application, CommandHandler, ContextTypes, filters
+from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes, filters
 
 from eden import __version__
 from eden.config import Config, load
-from eden.core.plugin import Command, Handler, Plugin, discover
+from eden.core.plugin import Callback, Command, Handler, Plugin, discover
 from eden.core.ratelimit import Cooldown
 
 log = logging.getLogger("eden")
+
+SHORT_DESCRIPTION = "🔮 Tarocchi e I Ching per il gruppo"
+DESCRIPTION = ("🔮 Eden consulta gli oracoli per te.\n\n"
+               "🃏 /tarocco estrae un arcano maggiore\n"
+               "☯️ /esagramma e /profetizza interrogano l'I Ching\n\n"
+               "/help per tutti i comandi")
 
 
 def guarded(command: Command, cooldown: Cooldown) -> Handler:
@@ -29,6 +35,27 @@ def guarded(command: Command, cooldown: Cooldown) -> Handler:
         except Exception:
             log.exception("/%s failed", command.name)
             await update.effective_message.reply_text("😵 Qualcosa è andato storto, riprova più tardi.")
+    return run
+
+
+def guarded_callback(callback: Callback, allowed_chats: frozenset[int]) -> Handler:
+    """Wrap a plugin's button handler: allow-list, always answer the query, never crash."""
+    async def run(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        query = update.callback_query
+        chat = update.effective_chat
+        if allowed_chats and (not chat or chat.id not in allowed_chats):
+            await query.answer()
+            return
+        try:
+            await callback.handler(update, context)
+        except Exception:
+            log.exception("callback %s failed", query.data)
+            await query.answer("😵 Qualcosa è andato storto.", show_alert=True)
+            return
+        try:
+            await query.answer()   # no-op if the handler already answered
+        except Exception:
+            pass
     return run
 
 
@@ -51,6 +78,11 @@ def build(cfg: Config, plugins: list[Plugin]) -> Application:
         # The menu shown when typing "/" in Telegram, generated from the plugins
         await app.bot.set_my_commands([BotCommand(c.name, c.description) for c in commands] +
                                       [BotCommand("help", "Cosa so fare")])
+        try:   # the profile shown in Telegram before the first /start
+            await app.bot.set_my_short_description(SHORT_DESCRIPTION)
+            await app.bot.set_my_description(DESCRIPTION)
+        except Exception:
+            log.warning("could not set the bot description", exc_info=True)
         log.info("Eden v%s started: %s", __version__, ", ".join(f"/{c.name}" for c in commands))
 
     app = Application.builder().token(cfg.token).post_init(post_init).build()
@@ -65,6 +97,9 @@ def build(cfg: Config, plugins: list[Plugin]) -> Application:
     app.add_handler(CommandHandler(["start", "help"], show_help, filters=chats))
     for c in commands:
         app.add_handler(CommandHandler(c.name, guarded(c, cooldown), filters=chats))
+    for cb in (cb for p in plugins for cb in p.callbacks):
+        app.add_handler(CallbackQueryHandler(guarded_callback(cb, frozenset(cfg.allowed_chats)),
+                                             pattern=f"^{cb.prefix}:"))
     return app
 
 

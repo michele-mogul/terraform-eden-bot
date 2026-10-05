@@ -1,7 +1,12 @@
 import random
 
 from eden.core.app import help_text
-from eden.core.plugin import COMMAND_RE, discover
+import sys
+import types
+
+import pytest
+
+from eden.core.plugin import COMMAND_RE, Callback, Plugin, discover
 from eden.core.ratelimit import Cooldown
 
 
@@ -31,3 +36,19 @@ def test_cooldown_per_user_and_chat():
     assert cd.hit(2, 10) == 0          # same user, other chat
     t[0] += 5
     assert cd.hit(1, 10) == 0
+
+
+def test_duplicate_callback_prefixes_are_rejected(monkeypatch):
+    async def noop(update, context):
+        pass
+    pkg = types.ModuleType("fakeplugins")
+    pkg.__path__ = []
+    a, b = types.ModuleType("fakeplugins.a"), types.ModuleType("fakeplugins.b")
+    a.PLUGIN = Plugin("a", "A", callbacks=(Callback("same", noop),))
+    b.PLUGIN = Plugin("b", "B", callbacks=(Callback("same", noop),))
+    for m in (pkg, a, b):
+        monkeypatch.setitem(sys.modules, m.__name__, m)
+    monkeypatch.setattr("pkgutil.iter_modules",
+                        lambda path: [types.SimpleNamespace(name="a"), types.SimpleNamespace(name="b")])
+    with pytest.raises(ValueError, match="defined twice"):
+        discover("fakeplugins")

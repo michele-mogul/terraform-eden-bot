@@ -38,6 +38,11 @@ The core finds it at start-up, registers the command, adds it to Telegram's comm
 `/help`, and wraps it with the cooldown and error handling. Put data files next to the code
 (`eden/plugins/<name>/data/`) and tests in `tests/`.
 
+Inline buttons: give them `callback_data="<prefix>:..."` (max 64 bytes) and declare
+`callbacks=(Callback("<prefix>", handler),)` in the plugin; the core routes the presses, applies
+`ALLOWED_CHATS` and answers the query. `eden.core.ui.suspense()` shows "typing…" for a moment
+before a reading.
+
 ## Development
 
 ```
