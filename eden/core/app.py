@@ -17,6 +17,7 @@ log = logging.getLogger("eden")
 SHORT_DESCRIPTION = "🔮 Tarocchi e I Ching per il gruppo"
 DESCRIPTION = ("🔮 Eden consulta gli oracoli per te.\n\n"
                "🃏 /tarocco estrae un arcano maggiore\n"
+               "📜 /wirth, /stesa e /arcano con i tarocchi di Oswald Wirth\n"
                "☯️ /esagramma e /profetizza interrogano l'I Ching\n\n"
                "/help per tutti i comandi")
 
