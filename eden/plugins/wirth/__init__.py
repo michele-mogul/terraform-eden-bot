@@ -9,8 +9,8 @@ from telegram.constants import ChatAction, ParseMode
 from telegram.ext import ContextTypes
 
 from eden.core.plugin import Callback, Command, Plugin
-from eden.core.ui import suspense
-from eden.plugins.wirth.deck import (POSITIONS, Card, card_of_the_day, card_text, draw,
+from eden.core.ui import CURRENT, only_owner, pressed_is_current, suspense
+from eden.plugins.wirth.deck import (POSITIONS, READING, Card, card_of_the_day, card_text, draw,
                                      fits_caption, position_label, spread_caption,
                                      spread_from_numbers, wirth_spread)
 from eden.plugins.wirth.images import cross
@@ -44,38 +44,45 @@ async def arcano(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await send_card(update.effective_message, card, f"🌅 {html.escape(user.first_name)} · ")
 
 
-def keyboard(numbers: list[int], used: set[int] = frozenset()) -> InlineKeyboardMarkup | None:
-    """One button per place of the cross; the four drawn numbers travel in the callback data."""
+def keyboard(numbers: list[int], owner: int, current: int) -> InlineKeyboardMarkup:
+    """One button per place of the cross; the drawn numbers and the asker travel in the data."""
     data = "-".join(map(str, numbers))
-    buttons = [InlineKeyboardButton(POSITIONS[i][0], callback_data=f"{PREFIX}:{i}:{data}")
-               for i in range(5) if i not in used]
-    if not buttons:
-        return None
-    return InlineKeyboardMarkup([buttons[:3], buttons[3:]] if len(buttons) > 3 else [buttons])
+    buttons = [InlineKeyboardButton((CURRENT if i == current else "") + POSITIONS[i][0],
+                                    callback_data=f"{PREFIX}:{i}:{data}:{owner}")
+               for i in range(5)]
+    return InlineKeyboardMarkup([buttons[:3], buttons[3:]])
+
+
+def place_text(cards: tuple[Card, ...], i: int) -> str:
+    return card_text(cards[i], f"<b>{position_label(i)}</b>\n<i>{READING[i]}</i>\n\n")
 
 
 async def stesa(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     cards = wirth_spread(_rng)
     numbers = [c.number for c in cards[:4]]
+    owner = update.effective_user.id
     await suspense(update, context, ChatAction.UPLOAD_PHOTO)
-    await update.effective_message.reply_photo(
+    photo = await update.effective_message.reply_photo(
         cross(cards), caption=spread_caption(" ".join(context.args or []), cards),
-        parse_mode=ParseMode.HTML, reply_markup=keyboard(numbers))
+        parse_mode=ParseMode.HTML)
+    # One message for the whole reading: the buttons change it in place
+    await photo.reply_text(place_text(cards, 0), parse_mode=ParseMode.HTML,
+                           reply_markup=keyboard(numbers, owner, 0))
 
 
 async def on_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
-    _, pos, data = query.data.split(":")
+    _, pos, data, owner = query.data.split(":")
+    if not await only_owner(query, int(owner)):
+        return
+    if pressed_is_current(query):
+        await query.answer()
+        return
     i, numbers = int(pos), [int(n) for n in data.split("-")]
-    card = spread_from_numbers(numbers)[i]
     await query.answer()
-    await query.message.reply_text(card_text(card, f"<b>{position_label(i)}</b>\n"),
-                                   parse_mode=ParseMode.HTML)
-    # Each place is revealed once: drop the pressed button
-    markup = query.message.reply_markup
-    shown = {int(b.callback_data.split(":")[1]) for row in markup.inline_keyboard for b in row} \
-        if markup else set()
-    await query.edit_message_reply_markup(keyboard(numbers, (set(range(5)) - shown) | {i}))
+    await query.edit_message_text(place_text(spread_from_numbers(numbers), i),
+                                  parse_mode=ParseMode.HTML,
+                                  reply_markup=keyboard(numbers, int(owner), i))
 
 
 PLUGIN = Plugin(

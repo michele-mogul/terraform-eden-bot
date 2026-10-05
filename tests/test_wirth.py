@@ -79,26 +79,35 @@ def test_cross_image():
     assert im.size == (3 * 300 + 4 * 28, 3 * 508 + 4 * 28)
 
 
-def _query(data, markup):
-    message = SimpleNamespace(reply_text=AsyncMock(), reply_markup=markup)
+def _query(data, markup, user=42):
+    message = SimpleNamespace(reply_markup=markup)
     query = SimpleNamespace(data=data, message=message, answer=AsyncMock(),
-                            edit_message_reply_markup=AsyncMock())
+                            from_user=SimpleNamespace(id=user), edit_message_text=AsyncMock())
     return SimpleNamespace(callback_query=query), query
 
 
-def test_buttons_reveal_each_place_once():
+def test_places_change_one_message_and_only_for_the_asker():
     numbers = [1, 15, 8, 0]                                   # the Fool is card 0, worth 22
-    markup = wirth.keyboard(numbers)
-    datas = [b.callback_data for row in markup.inline_keyboard for b in row]
-    assert len(datas) == 5 and all(len(d.encode()) <= 64 for d in datas)
+    markup = wirth.keyboard(numbers, 42, 0)
+    buttons = [b for row in markup.inline_keyboard for b in row]
+    assert len(buttons) == 5 and buttons[0].text.startswith("▸ ")
+    assert all(len(b.callback_data.encode()) <= 64 for b in buttons)
+    first = wirth.place_text(wirth_spread(random.Random(1)), 0)
+    assert first.startswith("<b>Affermazione · Pro</b>\n<i>L'Affermazione mette sulla via")
+    assert all(len(wirth.place_text(spread, i)) < 4096
+               for spread in (wirth_spread(random.Random(n)) for n in range(200)) for i in range(5))
 
-    update, query = _query(datas[4], markup)                  # Sintesi: 46 → 10
+    update, query = _query(buttons[4].callback_data, markup)  # Sintesi: 46 → 10
     asyncio.run(wirth.on_button(update, None))
-    text = query.message.reply_text.call_args.args[0]
+    text = query.edit_message_text.call_args.args[0]
     assert text.startswith("<b>Sintesi</b>") and "La Ruota della Fortuna" in text
-    left = query.edit_message_reply_markup.call_args.args[0]
-    assert [b.callback_data for row in left.inline_keyboard for b in row] == datas[:4]
+    new = query.edit_message_text.call_args.kwargs["reply_markup"]
+    assert [b.text.startswith("▸ ") for row in new.inline_keyboard for b in row] == [False] * 4 + [True]
 
-    update, query = _query(datas[1], left)                    # Negazione
+    update, query = _query(buttons[1].callback_data, markup, user=7)   # someone else
     asyncio.run(wirth.on_button(update, None))
-    assert "Il Diavolo" in query.message.reply_text.call_args.args[0]
+    query.edit_message_text.assert_not_called()
+
+    update, query = _query(buttons[0].callback_data, markup)  # already shown
+    asyncio.run(wirth.on_button(update, None))
+    query.edit_message_text.assert_not_called()

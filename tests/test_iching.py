@@ -102,27 +102,32 @@ def test_from_values_rebuilds_the_same_reading():
         assert from_values(r.values) == r
 
 
-def _query(data, markup):
-    message = SimpleNamespace(reply_text=AsyncMock(), reply_markup=markup)
+def _query(data, markup, user=42, asked="/esagramma amore?"):
+    message = SimpleNamespace(reply_markup=markup, reply_to_message=SimpleNamespace(text=asked))
     query = SimpleNamespace(data=data, message=message, answer=AsyncMock(),
-                            edit_message_reply_markup=AsyncMock())
+                            from_user=SimpleNamespace(id=user), edit_message_text=AsyncMock())
     return SimpleNamespace(callback_query=query), query
 
 
-def test_buttons_reveal_details_once_and_fit_callback_data():
+def test_buttons_change_one_message_and_only_for_the_asker():
     r = from_values([9, 7, 8, 7, 8, 6])
-    markup = iching.keyboard(r)
-    datas = [b.callback_data for b in markup.inline_keyboard[0]]
-    assert len(datas) == 2 and all(len(d.encode()) <= 64 for d in datas)
-    assert iching.keyboard(from_values([7, 8, 7, 8, 7, 8])) is None
+    markup = iching.keyboard(r, 42)
+    buttons = markup.inline_keyboard[0]
+    assert [b.text[:2] for b in buttons][0] == "▸ " and len(buttons) == 3
+    assert all(len(b.callback_data.encode()) <= 64 for b in buttons)
+    assert iching.keyboard(from_values([7, 8, 7, 8, 7, 8]), 42) is None
 
-    update, query = _query(datas[0], markup)                  # "Linee mobili"
+    update, query = _query(buttons[1].callback_data, markup)            # "Linee mobili"
     asyncio.run(iching.on_button(update, None))
-    assert "Linea 1" in query.message.reply_text.call_args.args[0]
-    left = query.edit_message_reply_markup.call_args.args[0]
-    assert [b.callback_data for b in left.inline_keyboard[0]] == [datas[1]]
+    text, kwargs = query.edit_message_text.call_args.args[0], query.edit_message_text.call_args.kwargs
+    assert "amore?" in text and "Linea 1" in text and "<code>" in text
+    assert [b.text.startswith("▸ ") for b in kwargs["reply_markup"].inline_keyboard[0]] == [False, True, False]
 
-    update, query = _query(datas[1], left)                    # then "Trasformazione"
+    update, query = _query(buttons[2].callback_data, markup, user=7)    # someone else
     asyncio.run(iching.on_button(update, None))
-    assert "Si trasforma in" in query.message.reply_text.call_args.args[0]
-    assert query.edit_message_reply_markup.call_args.args[0] is None
+    query.edit_message_text.assert_not_called()
+    assert "Solo chi" in query.answer.call_args.args[0]
+
+    update, query = _query(buttons[0].callback_data, markup)            # the view already shown
+    asyncio.run(iching.on_button(update, None))
+    query.edit_message_text.assert_not_called()

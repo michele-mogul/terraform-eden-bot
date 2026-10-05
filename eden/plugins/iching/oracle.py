@@ -124,9 +124,13 @@ def describe(h: dict) -> str:
             f"<b>Giudizio</b>\n{_e(h['judgement'])}\n\n<b>Immagine</b>\n{_e(h['images'])}")
 
 
-def hexagram_text(r: Reading) -> str:
+def header(r: Reading) -> str:
     head = f"❓ <i>{_e(r.question)}</i>\n\n" if r.question.strip() else ""
-    return head + figure(r) + "\n\n" + describe(r.primary)
+    return head + figure(r)
+
+
+def hexagram_text(r: Reading) -> str:
+    return header(r) + "\n\n" + describe(r.primary)
 
 
 def moving_text(r: Reading) -> str:
