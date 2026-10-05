@@ -8,8 +8,7 @@ Telegram bot for a group of friends: tarot cards and I Ching, built from plugins
 | `/wirth` | One arcanum of Oswald Wirth's deck with Wirth's complete interpretation |
 | `/stesa <domanda>` | Wirth's cross (affirmation, negation, discussion, solution, synthesis) as an image, plus one message whose buttons switch between the five places (only for who asked) |
 | `/arcano` | Card of the day from Wirth's deck (with his interpretation), the same for a person all day |
-| `/esagramma <domanda>` | An I Ching hexagram for the question (yarrow-stalk method), as a picture (drawn lines, moving lines marked, the relating hexagram beside it) with the text as caption |
-| `/profetizza <domanda>` | The picture, then the full reading in one message whose buttons switch between hexagram, moving lines and transformation (only for who asked) |
+| `/esagramma <domanda>` (or `/profetizza`) | An I Ching reading (yarrow-stalk method): the hexagram as a picture (moving lines marked, the relating hexagram beside it) in one message whose buttons switch the caption between hexagram, moving lines and transformation (only for who asked); pages too long for a caption go in a text message below |
 | `/help` | Generated list of commands |
 
 In groups commands also work as `/tarocco@botname`. Each user has a short cooldown (`COOLDOWN_SECONDS`).
