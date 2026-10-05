@@ -5,26 +5,35 @@ from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
 
 from eden.core.plugin import Callback, Command, Plugin
-from eden.core.ui import suspense
-from eden.plugins.iching.oracle import (Reading, cast, from_values, hexagram_text, moving_text,
-                                        prophecy_text, relating_text)
+from eden.core.ui import CURRENT, only_owner, pressed_is_current, suspense
+from eden.plugins.iching.oracle import (Reading, cast, from_values, header, hexagram_text,
+                                        moving_text, prophecy_text, relating_text)
 
 PREFIX = "iching"
-BUTTONS = {"lines": "📜 Linee mobili", "rel": "↪ Trasformazione"}
+VIEWS = {"hex": "☯️ Esagramma", "lines": "📜 Linee mobili", "rel": "↪ Trasformazione"}
 
 
 def _question(context: ContextTypes.DEFAULT_TYPE) -> str:
     return " ".join(context.args or []).strip()
 
 
-def keyboard(r: Reading, used: set[str] = frozenset()) -> InlineKeyboardMarkup | None:
-    """Buttons to reveal the moving lines and the relating hexagram; the reading travels in the data."""
+def view_text(r: Reading, view: str) -> str:
+    if view == "lines":
+        return header(r) + "\n\n" + moving_text(r)
+    if view == "rel":
+        return header(r) + "\n\n" + relating_text(r)
+    return hexagram_text(r)
+
+
+def keyboard(r: Reading, owner: int, current: str = "hex") -> InlineKeyboardMarkup | None:
+    """Views of one reading; the line values and the asker travel in the callback data."""
     if not r.moving:
         return None
     values = "".join(map(str, r.values))
-    row = [InlineKeyboardButton(label, callback_data=f"{PREFIX}:{kind}:{values}")
-           for kind, label in BUTTONS.items() if kind not in used]
-    return InlineKeyboardMarkup([row]) if row else None
+    return InlineKeyboardMarkup([[
+        InlineKeyboardButton((CURRENT if view == current else "") + label,
+                             callback_data=f"{PREFIX}:{view}:{values}:{owner}")
+        for view, label in VIEWS.items()]])
 
 
 async def esagramma(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -32,8 +41,9 @@ async def esagramma(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await suspense(update, context)
     text = hexagram_text(r)
     if not r.moving:
-        text += "\n\n<i>Nessuna linea mobile: la situazione è stabile.</i>"
-    await update.effective_message.reply_text(text, parse_mode=ParseMode.HTML, reply_markup=keyboard(r))
+        text += "\n\n" + moving_text(r)
+    await update.effective_message.reply_text(text, parse_mode=ParseMode.HTML,
+                                              reply_markup=keyboard(r, update.effective_user.id))
 
 
 async def profetizza(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -44,15 +54,19 @@ async def profetizza(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
 
 async def on_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
-    _, kind, values = query.data.split(":")
-    r = from_values([int(v) for v in values])
-    text = moving_text(r) if kind == "lines" else relating_text(r)
+    _, view, values, owner = query.data.split(":")
+    if not await only_owner(query, int(owner)):
+        return
+    if pressed_is_current(query):
+        await query.answer()
+        return
+    # The question is in the command this message answers
+    asked = query.message.reply_to_message
+    question = asked.text.partition(" ")[2].strip() if asked and asked.text else ""
+    r = from_values([int(v) for v in values], question)
     await query.answer()
-    await query.message.reply_text(text, parse_mode=ParseMode.HTML)
-    # Each detail is revealed once: drop the pressed button, keep the other
-    markup = query.message.reply_markup
-    shown = {b.callback_data.split(":")[1] for row in markup.inline_keyboard for b in row} if markup else set()
-    await query.edit_message_reply_markup(keyboard(r, set(BUTTONS) - shown | {kind}))
+    await query.edit_message_text(view_text(r, view), parse_mode=ParseMode.HTML,
+                                  reply_markup=keyboard(r, int(owner), view))
 
 
 PLUGIN = Plugin(

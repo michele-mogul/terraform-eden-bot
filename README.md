@@ -6,9 +6,9 @@ Telegram bot for a group of friends: tarot cards and I Ching, built from plugins
 |---|---|
 | `/tarocco` | Draws one of the 22 Major Arcana (Rider-Waite-Smith), with its Italian name |
 | `/wirth` | One arcanum of Oswald Wirth's deck with Wirth's complete interpretation |
-| `/stesa <domanda>` | Wirth's cross (affirmation, negation, discussion, solution, synthesis) as an image; one button per place shows Wirth's text for that card |
+| `/stesa <domanda>` | Wirth's cross (affirmation, negation, discussion, solution, synthesis) as an image, plus one message whose buttons switch between the five places (only for who asked) |
 | `/arcano` | Card of the day from Wirth's deck (with his interpretation), the same for a person all day |
-| `/esagramma <domanda>` | An I Ching hexagram for the question (yarrow-stalk method), drawn with its trigrams; buttons reveal moving lines and transformation |
+| `/esagramma <domanda>` | An I Ching hexagram for the question (yarrow-stalk method), drawn with its trigrams; buttons switch the same message between hexagram, moving lines and transformation (only for who asked) |
 | `/profetizza <domanda>` | Hexagram, moving lines and the hexagram it changes into, in one message |
 | `/help` | Generated list of commands |
 
