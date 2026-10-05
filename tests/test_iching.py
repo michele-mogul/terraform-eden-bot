@@ -2,7 +2,14 @@ import random
 from collections import Counter
 from datetime import datetime
 
-from eden.plugins.iching.oracle import by_lines, cast, cast_line, hexagrams, prophecy_text
+import asyncio
+from html.parser import HTMLParser
+from types import SimpleNamespace
+from unittest.mock import AsyncMock
+
+from eden.plugins import iching
+from eden.plugins.iching.oracle import (TRIGRAMS, by_lines, cast, cast_line, figure, from_values,
+                                        hexagram_text, hexagrams, prophecy_text, trigrams)
 
 
 def test_data_has_64_hexagrams_with_consistent_lines():
@@ -43,3 +50,79 @@ def test_prophecy_text_fits_a_telegram_message():
     for _ in range(300):
         text = prophecy_text(cast("una domanda", rng=rng))
         assert "Giudizio" in text and len(text) < 4096
+
+
+class _Tags(HTMLParser):
+    """Telegram rejects unbalanced or unknown tags: check what we send."""
+    ALLOWED = {"b", "i", "code"}
+
+    def __init__(self):
+        super().__init__()
+        self.stack = []
+
+    def handle_starttag(self, tag, attrs):
+        assert tag in self.ALLOWED, tag
+        self.stack.append(tag)
+
+    def handle_endtag(self, tag):
+        assert self.stack.pop() == tag
+
+
+def test_texts_are_valid_telegram_html():
+    rng = random.Random(5)
+    for q in ["<script> & co", "", "amore?"]:
+        for _ in range(100):
+            t = _Tags()
+            t.feed(prophecy_text(cast(q, rng=rng)))
+            assert t.stack == []
+    assert "&lt;script&gt; &amp; co" in hexagram_text(cast("<script> & co", rng=rng))
+
+
+def test_trigrams_match_the_data_for_all_64():
+    for h in hexagrams():
+        # the data's trigram numbers follow the trigram list; our table is keyed by lines
+        assert trigrams(h).startswith(TRIGRAMS[tuple(h["lines"][3:])][0])
+    assert trigrams(by_lines([1, 1, 1, 0, 0, 0])) == "☷ Terra sopra · ☰ Cielo sotto"   # 11 Peace
+
+
+def test_figure_is_drawn_top_down_with_moving_marks_and_relating():
+    r = from_values([9, 8, 8, 8, 8, 6])          # moving: line 1 (old yang), line 6 (old yin)
+    rows = figure(r).removeprefix("<code>").removesuffix("</code>").split("\n")
+    assert [row[0] for row in rows] == list("654321")
+    assert rows[0].startswith("6 ━━━   ━━━ ✕") and rows[0].endswith("━━━━━━━━━")
+    assert rows[5].startswith("1 ━━━━━━━━━ ○") and rows[5].endswith("━━━   ━━━")
+    assert len({len(row) for row in rows}) == 1
+    assert "   ━" not in figure(from_values([7, 8, 7, 8, 7, 8]))[-12:]   # no relating column
+
+
+def test_from_values_rebuilds_the_same_reading():
+    rng = random.Random(9)
+    for _ in range(200):
+        r = cast("", rng=rng)
+        assert from_values(r.values) == r
+
+
+def _query(data, markup):
+    message = SimpleNamespace(reply_text=AsyncMock(), reply_markup=markup)
+    query = SimpleNamespace(data=data, message=message, answer=AsyncMock(),
+                            edit_message_reply_markup=AsyncMock())
+    return SimpleNamespace(callback_query=query), query
+
+
+def test_buttons_reveal_details_once_and_fit_callback_data():
+    r = from_values([9, 7, 8, 7, 8, 6])
+    markup = iching.keyboard(r)
+    datas = [b.callback_data for b in markup.inline_keyboard[0]]
+    assert len(datas) == 2 and all(len(d.encode()) <= 64 for d in datas)
+    assert iching.keyboard(from_values([7, 8, 7, 8, 7, 8])) is None
+
+    update, query = _query(datas[0], markup)                  # "Linee mobili"
+    asyncio.run(iching.on_button(update, None))
+    assert "Linea 1" in query.message.reply_text.call_args.args[0]
+    left = query.edit_message_reply_markup.call_args.args[0]
+    assert [b.callback_data for b in left.inline_keyboard[0]] == [datas[1]]
+
+    update, query = _query(datas[1], left)                    # then "Trasformazione"
+    asyncio.run(iching.on_button(update, None))
+    assert "Si trasforma in" in query.message.reply_text.call_args.args[0]
+    assert query.edit_message_reply_markup.call_args.args[0] is None

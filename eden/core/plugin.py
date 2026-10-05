@@ -1,7 +1,8 @@
 """Plugin contract and discovery.
 
 A plugin is a package in eden/plugins/ that exposes PLUGIN = Plugin(...). Adding a feature means
-adding a package: the core registers its commands, the Telegram command menu and /help.
+adding a package: the core registers its commands, its inline-button callbacks, the Telegram
+command menu and /help.
 """
 
 import importlib
@@ -15,6 +16,7 @@ from telegram.ext import ContextTypes
 
 Handler = Callable[[Update, ContextTypes.DEFAULT_TYPE], Awaitable[None]]
 COMMAND_RE = re.compile(r"^[a-z0-9_]{1,32}$")   # Telegram's rule for command names
+PREFIX_RE = re.compile(r"^[a-z0-9_]{1,16}$")
 
 
 @dataclass(frozen=True)
@@ -26,10 +28,18 @@ class Command:
 
 
 @dataclass(frozen=True)
+class Callback:
+    """Inline-button presses whose callback_data starts with "<prefix>:" (max 64 bytes in total)."""
+    prefix: str
+    handler: Handler
+
+
+@dataclass(frozen=True)
 class Plugin:
     name: str
     description: str
     commands: tuple[Command, ...] = field(default_factory=tuple)
+    callbacks: tuple[Callback, ...] = field(default_factory=tuple)
 
 
 def discover(package: str = "eden.plugins") -> list[Plugin]:
@@ -51,4 +61,12 @@ def discover(package: str = "eden.plugins") -> list[Plugin]:
             if not 1 <= len(c.description) <= 256:
                 raise ValueError(f"/{c.name}: description must be 1-256 characters")
             seen[c.name] = p.name
+    prefixes: dict[str, str] = {}
+    for p in plugins:
+        for cb in p.callbacks:
+            if not PREFIX_RE.match(cb.prefix):
+                raise ValueError(f"invalid callback prefix {cb.prefix!r} in plugin {p.name}")
+            if cb.prefix in prefixes:
+                raise ValueError(f"callback prefix {cb.prefix!r} defined twice ({prefixes[cb.prefix]} and {p.name})")
+            prefixes[cb.prefix] = p.name
     return plugins

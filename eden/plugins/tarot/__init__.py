@@ -6,9 +6,11 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from telegram import Update
+from telegram.constants import ChatAction
 from telegram.ext import ContextTypes
 
 from eden.core.plugin import Command, Plugin
+from eden.core.ui import suspense
 
 CARDS = Path(__file__).parent / "cards"
 # Rider-Waite-Smith order (Strength 8, Justice 11), Italian names
@@ -45,6 +47,7 @@ def draw(rng: random.Random = _rng) -> Card:
 
 async def tarocco(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     card = draw()
+    await suspense(update, context, ChatAction.UPLOAD_PHOTO)
     with card.path.open("rb") as f:
         await update.effective_message.reply_photo(f, caption=f"🃏 {card.number} · {card.name}")
 
